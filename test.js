@@ -1,5 +1,6 @@
 // standard global variables
-var scene, camera, renderer;
+var scene, camera, renderer, game;
+var canvasContainer;
  
 // Character 3d object
 var character = null;
@@ -7,20 +8,26 @@ var level = null;
  
 // FUNCTIONS
 function init() {
+    canvasContainer = document.getElementById("canvas-container");
+
+    game = new Logic();
+
     // SCENE
     scene = new THREE.Scene();
+    // scene.position.set(startX,0,0);
  
     // CAMERA
-    var SCREEN_WIDTH = window.innerWidth,
-                SCREEN_HEIGHT = window.innerHeight;
+    var SCREEN_WIDTH = 850;
+    var SCREEN_HEIGHT = 400;
     var VIEW_ANGLE = 45,
                 ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT,
                 NEAR = 0.1, FAR = 1000;
     camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT,
                                                  NEAR, FAR);
     scene.add(camera);
-    camera.position.set(0,0,50);
-    camera.lookAt(scene.position);
+    // camera.position.set(startX,0,30);
+    // camera.lookAt(scene.position);
+    game.setScene(scene, camera);
  
     // RENDERER
     renderer = new THREE.WebGLRenderer({
@@ -29,6 +36,8 @@ function init() {
     });
     renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
     renderer.setClearColor(0x444444);
+    canvasContainer.appendChild( renderer.domElement );
+
     var container = document.body;
     container.appendChild( renderer.domElement );
  
@@ -41,10 +50,10 @@ function init() {
     // scene.add(character);
 
     character = CreateMeatBoy();
-    scene.add(character);
+    scene.add(character.obj);
 
     level = CreateLevel();
-    scene.add(level);
+    scene.add(level.obj);
 
     // Create light
     var light = new THREE.PointLight(0xffffff, 5.0);
@@ -54,15 +63,21 @@ function init() {
  
     // Start animation
     var clock = new THREE.Clock;
+    var time;
 
     var render = function () {
         requestAnimationFrame( render );
+
+        time = clock.getElapsedTime();
 
         // character.rotation.y = Math.sin(clock.getElapsedTime());
         // character.rotation.y = -0.5;
         AnimateTest(clock.getElapsedTime());
 
         RenderTextures();
+
+        // game.moveScene(scene, camera, time);
+        // game.animateCharacter(character, time);
 
         renderer.render(scene, camera);
     };

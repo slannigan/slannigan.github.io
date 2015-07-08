@@ -1,6 +1,15 @@
 var body, armR, armL, legR, legL, face;
 var shoulderR, shoulderL, hipR, hipL;
 
+var floorCeilingGap = 5;
+var heightDiffH = 4
+var heightDiffL = -4;
+var unitSize = 3;
+var buildingMat = new THREE.MeshLambertMaterial({ color: 0xaaaaaa });
+
+var startPosX = 2;
+var startPosY = heightDiffH;
+
 function CreateMeatBoy() {
 	var meat = new THREE.MeshLambertMaterial({ color: 0xff0000 });
 
@@ -51,7 +60,11 @@ function CreateMeatBoy() {
 	hipR.addChild(legR);
 	legR.translate(0, -0.15, 0);
 
-	return body.obj;
+	// Transform to starting position
+	body.translate(startPosX, startPosY + 0.75 + 0.2, 0);
+	body.rotate(0, Math.PI/2, 0);
+
+	return body;
 }
 
 function AnimateTest(time) {
@@ -85,12 +98,6 @@ function AnimateTest(time) {
 	// shoulderL.rotation.y = 0.5*Math.sin(factor);
 	// armL.position.z = -0.1*Math.sin(factor);
 }
-
-var floorCeilingGap = 5;
-var heightDiffH = 4
-var heightDiffL = -4;
-var unitSize = 3;
-var buildingMat = new THREE.MeshLambertMaterial({ color: 0xaaaaaa });
 
 function CreateBuildingBlock(length, isFlipped) {
 	var boxLength = length * unitSize;
@@ -171,7 +178,7 @@ function CreateChainsaw(type, prevType, horizontalOffset) {
 function CreateLevel(map) {
 	if (_.isUndefined(map)) {
 		// map = "sss.hh.mmm.l.H.M.L.eee"
-		map = "s.hcmlHMCLe";
+		map = "ssss..hc.m.l.H.MC.L.e";
 	}
 	var mapNode = new ModelNode();
 
@@ -198,6 +205,6 @@ function CreateLevel(map) {
 			mapNode.addChild(building);
 		}
 	}
-	mapNode.translate(-20,0,0);
-	return mapNode.obj;
+	// mapNode.translate(-20,0,0);
+	return mapNode;
 }
