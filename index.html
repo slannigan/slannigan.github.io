@@ -1,3 +1,68 @@
 <html>
-Hello world!
+<head>
+<script src="../ext/three.js"></script>
+<script src="../ext/underscore.js"></script>
+<script src="../js/TextureMapping.js"></script>
+<script src="../js/ModelNode.js"></script>
+<script src="../js/Model.js"></script>
+<script src="test.js"></script>
+<script id="vertShader" type="shader">
+varying vec2 vUv;
+varying vec3 vecPos;
+varying vec3 vecNormal;
+
+uniform float textRepeatX;
+uniform float textRepeatY;
+uniform int textureOn;
+
+void main() {
+	if (textureOn == 1) {
+	    // vUv = uv;
+	    vUv = uv * vec2(textRepeatX, textRepeatY);
+	    // Since the light is on world coordinates,
+	    // I'll need the vertex position in world coords too
+	    // (or I could transform the light position to view
+	    // coordinates, but that would be more expensive)
+	    vecPos = (modelMatrix * vec4(position, 1.0 )).xyz;
+	    // That's NOT exacly how you should transform your
+	    // normals but this will work fine, since my model
+	    // matrix is pretty basic
+	    vecNormal = (modelMatrix * vec4(normal, 0.0)).xyz;
+	    gl_Position = projectionMatrix *
+	                  modelViewMatrix * vec4(position, 1.0 );
+    }
+}
+</script>
+<script id="fragShader" type="shader">
+precision highp float;
+ 
+varying vec2 vUv;
+varying vec3 vecPos;
+varying vec3 vecNormal;
+ 
+uniform float color;
+uniform sampler2D texture;
+uniform int textureOn;
+ 
+uniform vec3 pointLightColor[MAX_POINT_LIGHTS];
+uniform vec3 pointLightPosition[MAX_POINT_LIGHTS];
+uniform float pointLightDistance[MAX_POINT_LIGHTS];
+ 
+void main(void) {
+    // Pretty basic lambertian lighting...
+    if (textureOn == 1) {
+	    vec4 addedLights = vec4(0.0,0.0,0.0, 1.0);
+	    for(int l = 0; l < MAX_POINT_LIGHTS; l++) {
+	        vec3 lightDirection = normalize(vecPos
+	                              -pointLightPosition[l]);
+	        addedLights.rgb += clamp(dot(-lightDirection,
+	                                 vecNormal), 0.0, 1.0)
+	                           * pointLightColor[l];
+	    }
+	    gl_FragColor = texture2D(texture, vUv) * addedLights;
+	}
+}
+</script>
+</head>
+<body style="margin: 0px;" onload="init()"></body>
 </html>
