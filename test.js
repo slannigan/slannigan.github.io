@@ -5,6 +5,8 @@ var canvasContainer;
 // Character 3d object
 var character = null;
 var level = null;
+
+var clock;
  
 // FUNCTIONS
 function init() {
@@ -62,7 +64,7 @@ function init() {
     scene.add(light);
  
     // Start animation
-    var clock = new THREE.Clock;
+    clock = new THREE.Clock;
     var time;
 
     var render = function () {
@@ -76,8 +78,8 @@ function init() {
 
         RenderTextures();
 
-        // game.moveScene(scene, camera, time);
-        // game.animateCharacter(character, time);
+        game.moveScene(scene, camera, time);
+        game.animateCharacter(character, time);
 
         renderer.render(scene, camera);
     };

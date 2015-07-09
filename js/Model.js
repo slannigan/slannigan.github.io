@@ -10,6 +10,8 @@ var buildingMat = new THREE.MeshLambertMaterial({ color: 0xaaaaaa });
 var startPosX = 2;
 var startPosY = heightDiffH;
 
+var inf = 1000;
+
 function CreateMeatBoy() {
 	var meat = new THREE.MeshLambertMaterial({ color: 0xff0000 });
 
@@ -62,41 +64,39 @@ function CreateMeatBoy() {
 
 	// Transform to starting position
 	body.translate(startPosX, startPosY + 0.75 + 0.2, 0);
+	// body.rotate(0,0,0.5);
 	body.rotate(0, Math.PI/2, 0);
+	// body.rotate(0,0,0);
 
 	return body;
 }
 
 function AnimateTest(time) {
-	// var factor = time*4;
+	var factor = time*24;
 
-	// var armLRotation = new THREE.Euler();
-	// // var armRRotation = new THREE.Euler();
-	// armLRotation.x = 0.5*Math.sin(factor);
-	// armLRotation.y = 0.5*Math.sin(factor);
-	// // armRRotation.x = -0.5*Math.sin(factor);
+	var armLRotation = new THREE.Euler();
+	armLRotation.x = 0.5*Math.sin(factor);
+	armLRotation.y = 0.5*Math.sin(factor);
 
-	// shoulderL.applyRotation(armLRotation);
+	shoulderL.applyRotation(armLRotation);
 
-	// var legLRotation = new THREE.Euler();
-	// legLRotation.x = -0.5*Math.sin(factor);
-	// hipL.applyRotation(legLRotation);
-	// var legLTranslation = new THREE.Vector3(0, 0.05*Math.cos(factor) + 0.1, 0);
-	// hipL.applyTranslation(legLTranslation);
-	// hipL.applyTranslation(THREE.Vector3(0, 0.5*Math.cos(factor), 0));
-	// shoulderR.applyRotation(armRRotation);
+	var legLRotation = new THREE.Euler();
+	legLRotation.x = -0.5*Math.sin(factor);
+	hipL.applyRotation(legLRotation);
+	var legLTranslation = new THREE.Vector3(0, 0.05*Math.cos(factor) + 0.1, 0);
+	hipL.applyTranslation(legLTranslation);
 
-	// shoulderL.rotate(0.01, 0, 0);
+	var armRRotation = new THREE.Euler();
+	armRRotation.x = -0.5*Math.sin(factor);
+	armRRotation.y = -0.5*Math.sin(factor);
 
-	// shoulderL.rotate(0.5*Math.sin(factor), 0, 0);
+	shoulderR.applyRotation(armRRotation);
 
-	// shoulderR.rotation.x = -0.5*Math.sin(factor);
-	// shoulderR.rotation.y = 0.5*Math.sin(factor);
-	// armR.position.z = 0.1*Math.sin(factor);
-
-	// shoulderL.rotation.x = 0.5*Math.sin(factor);
-	// shoulderL.rotation.y = 0.5*Math.sin(factor);
-	// armL.position.z = -0.1*Math.sin(factor);
+	var legRRotation = new THREE.Euler();
+	legRRotation.x = 0.5*Math.sin(factor);
+	hipR.applyRotation(legRRotation);
+	var legRTranslation = new THREE.Vector3(0, 0.05*Math.cos(factor) + 0.1, 0);
+	hipR.applyTranslation(legLTranslation);
 }
 
 function CreateBuildingBlock(length, isFlipped) {
@@ -142,6 +142,16 @@ function CreateBuilding(type, length, horizontalOffset) {
 		verticalOffset = heightDiffL;
 	}
 
+	var minX = horizontalOffset*unitSize;
+	var maxX = (horizontalOffset + length) * unitSize;
+
+	for (var i = horizontalOffset; i < horizontalOffset + length; i ++) {
+		game.addBoundingBox(i, minX, maxX, -inf, verticalOffset);
+		if (!_.isNull(building2)) {
+			game.addBoundingBox(i, minX, maxX, verticalOffset + floorCeilingGap, inf);
+		}
+	}
+
 	var group = new ModelNode();
 	group.addChild(building1);
 	if (!_.isNull(building2)) {
@@ -169,18 +179,28 @@ function CreateChainsaw(type, prevType, horizontalOffset) {
 	}
 
 	var chainsaw = new BoxNode();
-	chainsaw.createObj(tempMat, unitSize*0.9, unitSize*0.9, 0.1);
+	var diameter = unitSize*0.9;
+	chainsaw.createObj(tempMat, diameter, diameter, 0.1);
 
 	chainsaw.translate(horizontalOffset*unitSize + (unitSize/2), verticalOffset, 0);
+
+	game.addBoundingCircle(horizontalOffset, chainsaw.translation.x, chainsaw.translation.y, diameter/2)
+
 	return chainsaw;
 }
 
 function CreateLevel(map) {
 	if (_.isUndefined(map)) {
 		// map = "sss.hh.mmm.l.H.M.L.eee"
-		map = "ssss..hc.m.l.H.MC.L.e";
+		// map = "ssss.hc.m.l.H.MC.L.e";
+		map = "lllllll..lllll..ll.ll.ll...llllllllllllllllllllllllllllllllllllllllllllllllll";
+		// map = "llllllllllllllllllllllllllllllllllllllllllllllllll";
 	}
 	var mapNode = new ModelNode();
+
+	if (!_.isUndefined(game)) {
+		game.storeMapInfo(map, unitSize, startPosX, startPosY)
+	}
 
 	for (var i = 0, mapLocation = 0; i < map.length; i++, mapLocation++) {
 		var currChar = map.charAt(i);
