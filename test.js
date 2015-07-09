@@ -28,6 +28,7 @@ function init() {
                                                  NEAR, FAR);
     scene.add(camera);
     // camera.position.set(startX,0,30);
+    // camera.position.set(0,0,30);
     // camera.lookAt(scene.position);
     game.setScene(scene, camera);
  
@@ -57,6 +58,11 @@ function init() {
     level = CreateLevel();
     scene.add(level.obj);
 
+    // var startPoint = new THREE.Vector3(0,0,0);
+    // var directionVector = new THREE.Vector3(0,0.3,0);
+    // var testParticles = createBloodSplatter(startPoint, directionVector, 0);
+    // scene.add(testParticles.obj);
+
     // Create light
     var light = new THREE.PointLight(0xffffff, 5.0);
     // We want it to be very close to our character
@@ -74,12 +80,13 @@ function init() {
 
         // character.rotation.y = Math.sin(clock.getElapsedTime());
         // character.rotation.y = -0.5;
-        AnimateTest(clock.getElapsedTime());
-
-        RenderTextures();
+        AnimateTest(time);
 
         game.moveScene(scene, camera, time);
         game.animateCharacter(character, time);
+
+        RenderTextures();
+        RenderParticles(time);
 
         renderer.render(scene, camera);
     };

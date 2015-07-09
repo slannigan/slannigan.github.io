@@ -5,7 +5,10 @@
 <script src="js/TextureMapping.js"></script>
 <script src="js/ModelNode.js"></script>
 <script src="js/Model.js"></script>
+<script src="js/Sounds.js"></script>
 <script src="js/Logic.js"></script>
+<script src="js/Billboards.js"></script>
+<script src="js/Particles.js"></script>
 <script src="test.js"></script>
 <script id="vertShader" type="shader">
 varying vec2 vUv;
@@ -67,5 +70,15 @@ void main(void) {
 </head>
 <body style="margin: 0px;" onload="init()">
 	<div id="canvas-container"></div>
+
+	<!-- Game sounds -->
+	<!--	// this.run = new Audio("../sounds/Meat_feet_fast1.wav");
+	// this.jump = new Audio("../sounds/Meat_jumps0.wav");
+	// this.land = new Audio("../sounds/Meat_Landing0.wav");
+	// this.death = new Audio("../sounds/meat_death_1.wav");
+	// this.saw = new Audio("../sounds/SawDeath0.wav");-->
+	<div style="display: hidden;">
+		<audio id="deathSound"><source type="audio/mpeg" src="sounds/meat_death_1.mp3"></source></audio>
+	</div>
 </body>
 </html>
