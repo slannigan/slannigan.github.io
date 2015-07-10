@@ -5,7 +5,8 @@ var floorCeilingGap = 5;
 var heightDiffH = 4
 var heightDiffL = -4;
 var unitSize = 3;
-var buildingMat = new THREE.MeshLambertMaterial({ color: 0xaaaaaa });
+// dark: 8d8a9f, light: 0xb5b2c5
+var buildingMat = new THREE.MeshLambertMaterial({ color: 0x8d8a9f });
 
 var startPosX = 2;
 var startPosY = heightDiffH;
@@ -13,14 +14,14 @@ var startPosY = heightDiffH;
 var inf = 1000;
 
 function CreateMeatBoy() {
-	var meat = new THREE.MeshLambertMaterial({ color: 0xff0000 });
+	var meat = new THREE.MeshLambertMaterial({ color: 0xbf000b });
 
 	body = new BoxNode();
 	body.createObj(meat, 1.5, 1, 0.75);
 	// body.scale(0.5, 0.5, 0.5);
 
 	face = new TextureNode();
-	face.createObj(1, 1, '../images/meatboy.png', true, 1, 1);
+	face.createObj(1, 1, 'images/meatboy.png', true, 1, 1, false);
 	body.addChild(face);
 	face.translate(0, 0, 0.377);
 
@@ -101,10 +102,30 @@ function AnimateTest(time) {
 
 function CreateBuildingBlock(length, isFlipped) {
 	var boxLength = length * unitSize;
-	var boxHeight = 50;
+	var boxHeight = 30;
 	var boxDepth = unitSize;
 	var building = new BoxNode();
 	building.createObj(buildingMat, boxLength, boxHeight, boxDepth);
+
+	// Textures
+	var front = new TextureNode();
+	front.createObj(boxLength, boxHeight, "images/brick.png", true, unitSize, unitSize, false);
+	front.translate(0,0,(boxDepth/2) + 0.001)
+	building.addChild(front);
+
+	var right = new TextureNode();
+	right.createObj(boxDepth, boxHeight, "images/brick.png", true, unitSize, unitSize, false);
+	right.rotate(0, Math.PI/2, 0);
+	right.translate((boxLength/2) + 0.001, 0, 0);
+	building.addChild(right);
+
+	var left = new TextureNode();
+	left.createObj(boxDepth, boxHeight, "images/brick.png", true, unitSize, unitSize, false);
+	left.rotate(0, -Math.PI/2, 0);
+	left.translate(-((boxLength/2) + 0.001), 0, 0);
+	building.addChild(left);
+
+	// var buildin
 
 	var buildingNode = new ModelNode();
 	buildingNode.addChild(building);
@@ -113,7 +134,6 @@ function CreateBuildingBlock(length, isFlipped) {
 
 	if (isFlipped) {
 		building.translate(0, boxHeight/2, 0);
-		building.rotate(0, Math.PI, 0);
 	}
 	else {
 		building.translate(0, -boxHeight/2, 0);
@@ -193,7 +213,7 @@ function CreateLevel(map) {
 	if (_.isUndefined(map)) {
 		// map = "sss.hh.mmm.l.H.M.L.eee"
 		// map = "ssss.hc.m.l.H.MC.L.e";
-		map = "lllllll..lllll..ll.ll.ll...llllllllllllllllllllllllllllllllllllllllllllllllll";
+		map = "HHHHHHH.lllll..ll.LL.ll...llllllllllllllllllllllllllllllllllllllllllllllllll";
 		// map = "llllllllllllllllllllllllllllllllllllllllllllllllll";
 	}
 	var mapNode = new ModelNode();
@@ -225,6 +245,20 @@ function CreateLevel(map) {
 			mapNode.addChild(building);
 		}
 	}
+
+	// Background 
+	var bgWidth = 2048;
+	var bgHeight = 512;
+	var bg1 = new TextureNode();
+	bg1.createObj(bgWidth, bgHeight, 'images/bg1.png', false, bgWidth, bgHeight, true);
+	mapNode.addChild(bg1);
+	bg1.translate(700,-150,-350);
+
+	var bg2 = new TextureNode();
+	bg2.createObj(bgWidth*3, bgHeight, 'images/bg2.png', true, bgWidth, bgHeight, true);
+	mapNode.addChild(bg2);
+	bg2.translate(2000, -50, -800);
+
 	// mapNode.translate(-20,0,0);
 	return mapNode;
 }

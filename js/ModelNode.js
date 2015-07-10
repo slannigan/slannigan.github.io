@@ -129,7 +129,7 @@ var TextureNode = function() {
 
 // Inherit all other methods of ModelNode.
 _.extend(TextureNode.prototype, ModelNode.prototype, {
-	createObj: function(planeSizeX, planeSizeY, textureImage, tile, textureSizeX, textureSizeY) {
-		this.obj = TextureMapper(planeSizeX, planeSizeY, textureImage, tile, textureSizeX, textureSizeY)
+	createObj: function(planeSizeX, planeSizeY, textureImage, tile, textureSizeX, textureSizeY, isBg) {
+		this.obj = TextureMapper(planeSizeX, planeSizeY, textureImage, tile, textureSizeX, textureSizeY, isBg)
 	}
 });

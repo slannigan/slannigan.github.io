@@ -25,7 +25,7 @@ function RenderTextures() {
 // Returns: polygon, or NULL if args are bad
 // https://csantosbh.wordpress.com/2014/01/09/custom-shaders-with-three-js-uniforms-textures-and-lighting/
 // var TextureMapper = function(planeSize, textureImage, tile, textureSize) {
-function TextureMapper(planeSizeX, planeSizeY, textureImage, tile, textureSizeX, textureSizeY) {
+function TextureMapper(planeSizeX, planeSizeY, textureImage, tile, textureSizeX, textureSizeY, isBg) {
     if (!_.isNumber(planeSizeX) || !_.isNumber(planeSizeY) ||
         !_.isString(textureImage) || !_.isBoolean(tile) ||
         !_.isNumber(textureSizeX) || !_.isNumber(textureSizeY)) {
@@ -63,7 +63,8 @@ function TextureMapper(planeSizeX, planeSizeY, textureImage, tile, textureSizeX,
                 texture: {type: 't', value: null},
                 textRepeatX: {type: 'f', value: repeatX},
                 textRepeatY: {type: 'f', value: repeatY},
-                textureOn: {type: 'i', value: 1}
+                textureOn: {type: 'i', value: 1},
+                isBg: { type: 'i', value: isBg ? 1 : 0 }
             }
         ]),
         vertexShader: document.getElementById('vertShader').text,

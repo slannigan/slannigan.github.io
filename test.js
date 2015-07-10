@@ -38,7 +38,7 @@ function init() {
         alpha: true
     });
     renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-    renderer.setClearColor(0x444444);
+    renderer.setClearColor(0xb5b2c5);
     canvasContainer.appendChild( renderer.domElement );
 
     var container = document.body;
@@ -64,10 +64,13 @@ function init() {
     // scene.add(testParticles.obj);
 
     // Create light
-    var light = new THREE.PointLight(0xffffff, 5.0);
+    var light = new THREE.PointLight(0xffffff, 1.0);
     // We want it to be very close to our character
-    light.position.set(-10,30,10);
+    light.position.set(60,30,30);
+    // light.position.set(100,10,-50);
     scene.add(light);
+    var ambience = new THREE.AmbientLight(0x999999);
+    scene.add(ambience);
  
     // Start animation
     clock = new THREE.Clock;
@@ -82,7 +85,7 @@ function init() {
         // character.rotation.y = -0.5;
         AnimateTest(time);
 
-        game.moveScene(scene, camera, time);
+        game.moveScene(scene, camera, light, time);
         game.animateCharacter(character, time);
 
         RenderTextures();

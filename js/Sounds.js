@@ -1,43 +1,72 @@
 var Sounds = function() {
-	// this.run = new Audio("../sounds/Meat_feet_fast1.wav");
-	// this.jump = new Audio("../sounds/Meat_jumps0.wav");
-	// this.land = new Audio("../sounds/Meat_Landing0.wav");
-	// this.death = new Audio("../sounds/meat_death_1.wav");
-	// this.death = new Audio("../sounds/meat_death_1.mp3");
-	// this.death = new Audio("../sounds/LK 1M1 Circle Of Life.mp3");
-	// this.saw = new Audio("../sounds/SawDeath0.wav");
+	this.music = document.getElementById("backgroundMusic");
 
-	// this.run = document.getElementById("runSound");
-	// this.jump = document.getElementById("jumpSound");
-	// this.land = document.getElementById("landSound");
+	this.run = document.getElementById("runSound");
+	this.jump = document.getElementById("jumpSound");
+	this.land = document.getElementById("landSound");
 	this.death = document.getElementById("deathSound");
-	// this.saw = document.getElementById("sawSound");
+	this.saw = document.getElementById("sawSound");
 
-	this.runRate = 100;
+	this.runRate = 1;
 	this.runSoundTimer = null;
+
+	this.isRunning = false;
+	this.isJumping = false;
+	this.isFalling = false;
+
+	this.run.loop = true;
+	this.run.playbackRate = 2.5;
+	this.run.volume = 0.3;
+
+	this.music.loop = true;
+	this.music.play();
 }
 
 _.extend(Sounds.prototype, {
-	playRunningSound: function(self) {
-		self.run.play();
+	startRunning: function() {
+		if (!this.isRunning) {
+			this.isRunning = true;
+			console.log("Start running timer");
+			this.run.play();
+		}
 	},
 
-	startRunning: function() {
-		this.runSoundTimer = setInterval(this.playRunningSound, this.runRage, this);
+	endRunning: function() {
+		console.log("End running");
+		this.run.pause();
 	},
 
 	startJump: function() {
-		clearInterval(this.runSoundTimer);
-		this.jump.play();
+		if (!this.isJumping) {
+			console.log("Jumping");
+			this.isJumping = true;
+			this.isFalling = false;
+			this.isRunning = false;
+			this.endRunning();
+			this.jump.play();
+		}
 	},
 
-	endJump: function() {
-		this.land.play();
-		this.startRunning();
+	startLand: function() {
+		if (this.isFalling) {
+			this.isFalling = false;
+			console.log("Landing");
+			this.land.play();
+			this.startRunning();
+		}
+	},
+
+	startFall: function() {
+		if (!this.isFalling) {
+			this.isFalling = true;
+			this.isRunning = false;
+			this.isJumping = false;
+			console.log("Falling");
+			this.endRunning();
+		}
 	},
 
 	die: function() {
-		console.log("Trying to play death sound");
 		this.death.play();
 	},
 

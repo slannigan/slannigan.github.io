@@ -12,7 +12,7 @@ document.addEventListener('keydown', function(e) {
 
 var Billboard = function(width, height, location, image) {
 	// Create texture, place at given location
-	this.texture = TextureMapper(width, height, image, false, width, height);
+	this.texture = TextureMapper(width, height, image, false, width, height, false);
 	this.texture.position.set(location.x, location.y, location.z);
 
 	this.faceCamera();

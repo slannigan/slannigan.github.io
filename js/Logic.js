@@ -79,12 +79,50 @@ var BoundingCircle = function(centreX, centreY, radius) {
 
 // Inherit all other methods of ModelNode.
 _.extend(BoundingCircle.prototype, BoundingGeometry.prototype, {
+	// http://mathworld.wolfram.com/Circle-LineIntersection.html
+	// Their equation assumes the circle is centred at (0,0) - translate args to make this the case
+	intersects: function(x1, x2, y1, y2) {
+		x1 -= this.centreX;
+		x2 -= this.centreX;
+		y1 -= this.centreY;
+		y2 -= this.centreY;
+		var dx = x2 - x1;
+		var dy = y2 - y1;
+		var dr = Math.sqrt((dx*dx) + (dy*dy));
+		var D = (x1*y2) - (x2*y1);
+
+		var determinant = (this.radius * this.radius * dr * dr) - (D*D);
+		// console.log(determinant);
+		return determinant >= 0;
+
+		//circle: (x-centreX)2 + (y-centreY)2 = r2
+		//line: y = mx + b
+		//m = y2-y1/x2-x1, b = y1 - m*x1
+
+		// var cx = this.centreX;
+		// var cy = this.centreY;
+		// var r = this.radius;
+		// var m = (y2-y1)/(x2-x1);
+
+		// var a = 2;
+		// var b = 2*(y1*m - cx - x1 - m*cy);
+		// var c = cy*cy - cx*cx + x1*x1 + x2*x2 - r*r + 2*(m*(x1*m*(cy - y1)) - y1*cy);
+
+		// var discriminant = b*b - 4*a*c;
+
+		// return discriminant >= 0;
+	},
 	intersectsY: function(minX, maxX, minY, maxY) {
-		return false; // TEMP
+		// var intersects = this.intersects(maxX, maxX, minY, maxY);
+		// if (intersects) console.log("intersectsY");
+		// return intersects;
+		return false;
 	},
 
 	intersectsX: function(minX, maxX, minY, maxY) {
-		return false;
+		var intersects = (this.intersects(minX, maxX, minY, minY) || this.intersects(minX, maxX, maxY, maxY));
+		if (intersects) console.log("intersectsX");
+		return intersects;
 	},
 
 	isChainsaw: function() {
@@ -103,8 +141,6 @@ var Logic = function() {
 	this.moveSceneStartTime = 1;
 	this.menuSpeed = 0.01;
 	this.speed = 0.2;
-	this.characterLocationX;
-	this.characterLocationY;
 	this.characterLocationIndex;
 
 	this.lastTimeOnGround = 0;
@@ -124,14 +160,15 @@ var Logic = function() {
 	this.gameEnd = false;
 
 	this.audio = new Sounds();
+	this.firstCall = true;
+	this.isJumping = false;
+	this.isFalling = false;
 }
 // var output = 0;
 _.extend(Logic.prototype, {
 	storeMapInfo: function(map, unitSize, startPosX, startPosY) {
 		this.map = map;
 		this.unitSize = unitSize;
-		// this.characterLocationX = startPosX;
-		// this.characterLocationY = startPosY;
 		this.characterBound = {
 			minX: startPosX - (this.characterWidth/2),
 			maxX: startPosX + (this.characterWidth/2),
@@ -162,14 +199,20 @@ _.extend(Logic.prototype, {
 		camera.position.set(this.startPosX, this.startPosY, this.cameraDistanceZ);
 		camera.lookAt(scene.position);
 	},
-	moveScene: function(scene, camera, time) {
+	moveScene: function(scene, camera, light, time) {
 		if (time > this.moveSceneStartTime && !this.died && !this.gameEnd) {
 			scene.position.x += this.speed;
 			camera.position.x += this.speed;
 			camera.lookAt(scene.position);
+			light.position.x += this.speed;
 		}
 	},
 	animateCharacter: function(character, time) {
+		if (this.firstCall) {
+			this.firstCall = false;
+			console.log("Start running");
+			this.audio.startRunning();
+		}
 		if (!this.died && !this.gameEnd) {
 			var deltaTime = time - this.lastTimeOnGround;
 			var gravitySpeed = this.gravity * deltaTime;
@@ -246,6 +289,20 @@ _.extend(Logic.prototype, {
 						}
 					}
 				}
+			}
+
+			if (!this.isJumping && deltaY > 0) {
+				this.isJumping = true;
+				this.audio.startJump();
+			}
+			else if (!this.isFalling && deltaY < 0) {
+				this.isJumping = false;
+				this.isFalling = true;
+				this.audio.startFall();
+			}
+			else if (this.isFalling && deltaY == 0) {
+				this.isFalling = false;
+				this.audio.startLand();
 			}
 
 			this.characterBound.minX += deltaX;

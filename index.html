@@ -19,6 +19,7 @@ uniform float textRepeatX;
 uniform float textRepeatY;
 uniform int textureOn;
 
+// https://csantosbh.wordpress.com/2014/01/09/custom-shaders-with-three-js-uniforms-textures-and-lighting/
 void main() {
 	if (textureOn == 1) {
 	    // vUv = uv;
@@ -47,7 +48,10 @@ varying vec3 vecNormal;
 uniform float color;
 uniform sampler2D texture;
 uniform int textureOn;
+uniform int isBg;
  
+// https://github.com/mrdoob/three.js/blob/master/src/renderers/shaders/UniformsLib.js
+uniform vec3 ambientLightColor[MAX_POINT_LIGHTS];
 uniform vec3 pointLightColor[MAX_POINT_LIGHTS];
 uniform vec3 pointLightPosition[MAX_POINT_LIGHTS];
 uniform float pointLightDistance[MAX_POINT_LIGHTS];
@@ -63,7 +67,16 @@ void main(void) {
 	                                 vecNormal), 0.0, 1.0)
 	                           * pointLightColor[l];
 	    }
-	    gl_FragColor = texture2D(texture, vUv) * addedLights;
+	    // vec4 addedAmbience = vec4(0.0,0.0,0.0, 1.0);
+	    for (int l = 0; l < MAX_POINT_LIGHTS; l++) {
+	    	addedLights.rgb += ambientLightColor[l];
+	    }
+	    if (isBg == 1) {
+	    	gl_FragColor = texture2D(texture, vUv);
+	    }
+	    else {
+		    gl_FragColor = texture2D(texture, vUv) * addedLights;
+		}
 	}
 }
 </script>
@@ -72,13 +85,26 @@ void main(void) {
 	<div id="canvas-container"></div>
 
 	<!-- Game sounds -->
-	<!--	// this.run = new Audio("../sounds/Meat_feet_fast1.wav");
-	// this.jump = new Audio("../sounds/Meat_jumps0.wav");
-	// this.land = new Audio("../sounds/Meat_Landing0.wav");
-	// this.death = new Audio("../sounds/meat_death_1.wav");
-	// this.saw = new Audio("../sounds/SawDeath0.wav");-->
 	<div style="display: hidden;">
-		<audio id="deathSound"><source type="audio/mpeg" src="sounds/meat_death_1.mp3"></source></audio>
+		<audio id="runSound">
+			<source type="audio/wav" src="sounds/Meat_feet_fast1.wav"></source>
+		</audio>
+		<audio id="jumpSound">
+			<source type="audio/wav" src="sounds/Meat_jumps0.wav"></source>
+		</audio>
+		<audio id="landSound">
+			<source type="audio/wav" src="sounds/Meat_Landing0.wav"></source>
+		</audio>
+		<audio id="deathSound">
+			<source type="audio/wav" src="sounds/meat_death1.wav"></source>
+		</audio>
+		<audio id="sawSound">
+			<source type="audio/wav" src="sounds/SawDeath0.wav"></source>
+		</audio>
+
+		<audio id="backgroundMusic">
+			<source type="audio/mpeg" src="sounds/Danny Baranowsky - Super Meat Boy! - Digital Special Edition Soundtrack - 04 Ballad of the Burning Squirrel (Ch 1 Dark World).mp3"></source>
+		</audio>
 	</div>
 </body>
 </html>
