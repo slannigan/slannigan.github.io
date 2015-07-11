@@ -1,9 +1,10 @@
 var body, armR, armL, legR, legL, face;
 var shoulderR, shoulderL, hipR, hipL;
+var chainsaws = [];
 
 var floorCeilingGap = 5;
-var heightDiffH = 4
-var heightDiffL = -4;
+var heightDiffH = 6
+var heightDiffL = -6;
 var unitSize = 3;
 // dark: 8d8a9f, light: 0xb5b2c5
 var buildingMat = new THREE.MeshLambertMaterial({ color: 0x8d8a9f });
@@ -75,6 +76,7 @@ function CreateMeatBoy() {
 function AnimateTest(time) {
 	var factor = time*24;
 
+	// Meat Boy
 	var armLRotation = new THREE.Euler();
 	armLRotation.x = 0.5*Math.sin(factor);
 	armLRotation.y = 0.5*Math.sin(factor);
@@ -98,6 +100,11 @@ function AnimateTest(time) {
 	hipR.applyRotation(legRRotation);
 	var legRTranslation = new THREE.Vector3(0, 0.05*Math.cos(factor) + 0.1, 0);
 	hipR.applyTranslation(legLTranslation);
+
+	// Chainsaws
+	_.each(chainsaws, function(chainsaw) {
+		chainsaw.rotate(0,0,-0.1);
+	});
 }
 
 function CreateBuildingBlock(length, isFlipped) {
@@ -185,7 +192,7 @@ function CreateBuilding(type, length, horizontalOffset) {
 }
 
 var tempMat = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
-function CreateChainsaw(type, prevType, horizontalOffset) {
+function CreateChainsaw(type, prevType, horizontalOffset, scale) {
 	var verticalOffset = 0;
 	if (type == "C") {
 		verticalOffset += floorCeilingGap;
@@ -198,12 +205,17 @@ function CreateChainsaw(type, prevType, horizontalOffset) {
 		verticalOffset += heightDiffL;
 	}
 
-	var chainsaw = new BoxNode();
-	var diameter = unitSize*0.9;
-	chainsaw.createObj(tempMat, diameter, diameter, 0.1);
+	// var chainsaw = new BoxNode();
+	// var diameter = unitSize*0.9*scale;
+	// chainsaw.createObj(tempMat, diameter, diameter, 0.1);
 
+	var chainsaw = new TextureNode();
+	var diameter = unitSize*0.9*scale;
+	chainsaw.createObj(diameter, diameter, "images/saw.png", false, diameter, diameter, false);
 	chainsaw.translate(horizontalOffset*unitSize + (unitSize/2), verticalOffset, 0);
+	chainsaws.push(chainsaw);
 
+	// console.log("Creating bounding circle at offset " + horizontalOffset + ", x, y, d: " + chainsaw.translation.x + ", " + chainsaw.translation.y + ", " + diameter);
 	game.addBoundingCircle(horizontalOffset, chainsaw.translation.x, chainsaw.translation.y, diameter/2)
 
 	return chainsaw;
@@ -213,8 +225,10 @@ function CreateLevel(map) {
 	if (_.isUndefined(map)) {
 		// map = "sss.hh.mmm.l.H.M.L.eee"
 		// map = "ssss.hc.m.l.H.MC.L.e";
-		map = "HHHHHHH.lllll..ll.LL.ll...llllllllllllllllllllllllllllllllllllllllllllllllll";
-		// map = "llllllllllllllllllllllllllllllllllllllllllllllllll";
+		// map = "HHHHHHH.lllll..ll.LL.ll...llllllllllllllllllllllllllllllllllllllllllllllllll";
+		// map = "HHHHHHHHHHMMMMM";
+		map = "lllllllcllllHHHHHHlllllllllllllllllllllllllllllllllllll";
+		// map = "HHHHH..llllll.llllllclll...MMMMCMMMcMMM......"
 	}
 	var mapNode = new ModelNode();
 
@@ -230,7 +244,7 @@ function CreateLevel(map) {
 		if (currChar == "c" || currChar == "C") {
 			mapLocation--;
 			var prevChar = (i == 0) ? map.charAt(0) : map.charAt(i-1);
-			var chainsaw = CreateChainsaw(currChar, prevChar, mapLocation);
+			var chainsaw = CreateChainsaw(currChar, prevChar, mapLocation, 2);
 			mapNode.addChild(chainsaw);
 			continue;
 		}

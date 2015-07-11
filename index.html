@@ -67,10 +67,10 @@ void main(void) {
 	                                 vecNormal), 0.0, 1.0)
 	                           * pointLightColor[l];
 	    }
-	    // vec4 addedAmbience = vec4(0.0,0.0,0.0, 1.0);
 	    for (int l = 0; l < MAX_POINT_LIGHTS; l++) {
 	    	addedLights.rgb += ambientLightColor[l];
 	    }
+	    
 	    if (isBg == 1) {
 	    	gl_FragColor = texture2D(texture, vUv);
 	    }

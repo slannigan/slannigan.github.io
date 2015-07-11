@@ -1,3 +1,4 @@
+var particleContainer = null;
 var particleSystems = [];
 var particlesOn = true;
 var toggleParticles = false;
@@ -10,6 +11,11 @@ document.addEventListener('keydown', function(e) {
         toggleParticles = true;
     }
 });
+
+function GetParticleContainer() {
+	particleContainer = new ModelNode();
+	return particleContainer;
+}
 
 function RenderParticles(time) {
 	// console.log("Rendering particles");
@@ -48,7 +54,8 @@ var Particle = function(startPoint, speed, size, ttl, system) {
 	this.system = system;
 
 	this.billboard = new Billboard(size, size, startPoint, system.image);
-	this.system.obj.add(this.billboard.texture);
+	// this.system.obj.add(this.billboard.texture);
+	this.system.container.addChild(this.billboard.texture);
 }
 
 _.extend(Particle.prototype, {
@@ -73,7 +80,8 @@ _.extend(Particle.prototype, {
 var ParticleSystem = function(startPoint, startPointDistribution, directionVector, sizeAvg, sizeVar, ttlAvg, ttlVar, hasGravity, creationRate, image, alwaysOn, time) {
 	this.isDead = false;
 	this.particles = [];
-	this.obj = new THREE.Object3D();
+	this.container = new ModelNode();
+	// this.obj = new THREE.Object3D();
 
 	this.startPoint = startPoint;
 	this.startPointDistribution = startPointDistribution;

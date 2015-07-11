@@ -75,6 +75,7 @@ var BoundingCircle = function(centreX, centreY, radius) {
 	this.centreX = centreX;
 	this.centreY = centreY;
 	this.radius = radius;
+	console.log("x, y, r: " + this.centreX + ", " + this.centreY + ", " + this.radius);
 }
 
 // Inherit all other methods of ModelNode.
@@ -82,35 +83,35 @@ _.extend(BoundingCircle.prototype, BoundingGeometry.prototype, {
 	// http://mathworld.wolfram.com/Circle-LineIntersection.html
 	// Their equation assumes the circle is centred at (0,0) - translate args to make this the case
 	intersects: function(x1, x2, y1, y2) {
-		x1 -= this.centreX;
-		x2 -= this.centreX;
+		x1 -= (this.centreX);
+		x2 -= (this.centreX);
 		y1 -= this.centreY;
 		y2 -= this.centreY;
-		var dx = x2 - x1;
-		var dy = y2 - y1;
-		var dr = Math.sqrt((dx*dx) + (dy*dy));
-		var D = (x1*y2) - (x2*y1);
+		// var dx = x2 - x1;
+		// var dy = y2 - y1;
+		// var dr2 = (dx*dx) + (dy*dy);
+		// var D = (x1*y2) - (x2*y1);
 
-		var determinant = (this.radius * this.radius * dr * dr) - (D*D);
-		// console.log(determinant);
-		return determinant >= 0;
+		// var determinant = (this.radius * this.radius * dr2) - (D*D);
+		// // console.log(determinant);
+		// var ints = determinant >= 0;
+		// if (ints) {
+		// 	console.log("Intersected with transformed line (" + x1 + ", " + y1 + "), (" + x2 + ", " + y2 + ")");
+		// }
+		// return ints;
 
-		//circle: (x-centreX)2 + (y-centreY)2 = r2
-		//line: y = mx + b
-		//m = y2-y1/x2-x1, b = y1 - m*x1
+		// Hacky, and only works because Meat Boy's bounding rect is small, 
+		// but determinant method wasn't working...
+		var d1 = Math.sqrt(x2*x2 + y1*y1);
+		if (d1 <= this.radius) return true;
+		var d2 = Math.sqrt(x1*x1 + y1*y1);
+		if (d2 <= this.radius) return true;
+		var d3 = Math.sqrt(x2*x2 + y2*y2);
+		if (d3 <= this.radius) return true;
+		var d4 = Math.sqrt(x1*x1 + y2*y2)
+		if (d4 <= this.radius) return true;
 
-		// var cx = this.centreX;
-		// var cy = this.centreY;
-		// var r = this.radius;
-		// var m = (y2-y1)/(x2-x1);
-
-		// var a = 2;
-		// var b = 2*(y1*m - cx - x1 - m*cy);
-		// var c = cy*cy - cx*cx + x1*x1 + x2*x2 - r*r + 2*(m*(x1*m*(cy - y1)) - y1*cy);
-
-		// var discriminant = b*b - 4*a*c;
-
-		// return discriminant >= 0;
+		return false;
 	},
 	intersectsY: function(minX, maxX, minY, maxY) {
 		// var intersects = this.intersects(maxX, maxX, minY, maxY);
@@ -121,7 +122,7 @@ _.extend(BoundingCircle.prototype, BoundingGeometry.prototype, {
 
 	intersectsX: function(minX, maxX, minY, maxY) {
 		var intersects = (this.intersects(minX, maxX, minY, minY) || this.intersects(minX, maxX, maxY, maxY));
-		if (intersects) console.log("intersectsX");
+		if (intersects) console.log("intersectsX with line: (" + minX + ", " + minY + "), (" + maxX + ", " + minY + ")");
 		return intersects;
 	},
 
@@ -210,8 +211,8 @@ _.extend(Logic.prototype, {
 	animateCharacter: function(character, time) {
 		if (this.firstCall) {
 			this.firstCall = false;
-			console.log("Start running");
-			this.audio.startRunning();
+			// console.log("Start running");
+			// this.audio.startRunning();
 		}
 		if (!this.died && !this.gameEnd) {
 			var deltaTime = time - this.lastTimeOnGround;

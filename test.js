@@ -5,6 +5,7 @@ var canvasContainer;
 // Character 3d object
 var character = null;
 var level = null;
+var particles = null;
 
 var clock;
  
@@ -57,6 +58,9 @@ function init() {
 
     level = CreateLevel();
     scene.add(level.obj);
+
+    particles = GetParticleContainer();
+    scene.add(particles.obj);
 
     // var startPoint = new THREE.Vector3(0,0,0);
     // var directionVector = new THREE.Vector3(0,0.3,0);
