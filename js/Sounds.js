@@ -17,7 +17,7 @@ var Sounds = function() {
 	this.run.loop = true;
 	this.run.playbackRate = 2.5;
 
-	this.musicOn = false;
+	this.musicOn = true;
 	this.sfxOn = true;
 
 	this.music.loop = true;

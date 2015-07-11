@@ -142,6 +142,7 @@ var Logic = function() {
 	this.moveSceneStartTime = 1;
 	this.menuSpeed = 0.01;
 	this.speed = 0.2;
+	this.characterSpeed = 0.2;
 	this.characterLocationIndex;
 
 	this.lastTimeOnGround = 0;
@@ -204,10 +205,10 @@ _.extend(Logic.prototype, {
 	},
 	moveScene: function(scene, camera, light, time) {
 		if (time > this.moveSceneStartTime && !this.died && !this.gameEnd) {
-			scene.position.x += this.speed;
-			camera.position.x += this.speed;
+			scene.position.x += this.characterSpeed;
+			camera.position.x += this.characterSpeed;
 			camera.lookAt(scene.position);
-			light.position.x += this.speed;
+			light.position.x += this.characterSpeed;
 		}
 	},
 	chainsawDeath: function(time, p1x, p1y) {
@@ -319,6 +320,7 @@ _.extend(Logic.prototype, {
 			if (this.died) KillCharacter();
 
 			character.translate(deltaX, deltaY, 0);
+			this.characterSpeed = deltaX;
 		}
 	},
 	renderParticles: function(time) {

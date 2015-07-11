@@ -238,8 +238,8 @@ function CreateLevel(map) {
 		// map = "ssss.hc.m.l.H.MC.L.e";
 		// map = "HHHHHHH.lllll..ll.LL.ll...llllllllllllllllllllllllllllllllllllllllllllllllll";
 		// map = "HHHHHHHHHHMMMMM";
-		map = "lllllllcllllHHHHHHlllllllllllllllllllllllllllllllllllll";
-		// map = "HHHHH..llllll.llllllclll...MMMMCMMMcMMM......"
+		// map = "lllllllcllllHHHHHHlllllllllllllllllllllllllllllllllllll";
+		map = "HHHHH..llllll.llllllclll...MMMMMMMcMMM...lllllHHH..."
 	}
 	var mapNode = new ModelNode();
 
