@@ -75,9 +75,8 @@ function CreateMeatBoy() {
 
 	// Transform to starting position
 	body.translate(startPosX, startPosY + 0.75 + 0.2, 0);
-	// body.rotate(0,0,0.5);
-	body.rotate(0, Math.PI/2, 0);
-	// body.rotate(0,0,0);
+	body.resetRotationOrder('ZYX');
+	body.rotate(0, Math.PI/2, -0.25);
 
 	return characterNode;
 }

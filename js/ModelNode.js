@@ -1,3 +1,7 @@
+var xAxis = new THREE.Vector3(1,0,0);
+var yAxis = new THREE.Vector3(0,1,0);
+var zAxis = new THREE.Vector3(0,0,1);
+
 var ModelNode = function() {
 	this.parent = null;
 	this.children = [];
@@ -6,7 +10,7 @@ var ModelNode = function() {
 	this.localMatrix = new THREE.Matrix4();
 	this.translation = new THREE.Vector3(0,0,0);
 	// this.quaternion = new THREE.Quaternion();
-	this.rotation = new THREE.Euler();
+	this.rotation = new THREE.Euler(0,0,0,'XYZ');
 	this.scaleVec = new THREE.Vector3(1,1,1);
 }
 
@@ -51,6 +55,13 @@ _.extend(ModelNode.prototype, {
 
 		this.obj.scale.copy(this.scaleVec);
 		this.obj.updateMatrixWorld(true);
+	},
+
+	resetRotationOrder: function(newOrder) {
+		this.rotation.reorder(newOrder);
+		_.each(this.children, function(child) {
+			child.resetRotationOrder(newOrder);
+		});
 	},
 
 	applyTranslation: function(translation, updateGlobal) {
