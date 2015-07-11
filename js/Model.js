@@ -1,6 +1,7 @@
-var body, armR, armL, legR, legL, face;
+var characterNode, body, armR, armL, legR, legL, face;
 var shoulderR, shoulderL, hipR, hipL;
 var chainsaws = [];
+var alive = true;
 
 var floorCeilingGap = 5;
 var heightDiffH = 6
@@ -14,12 +15,20 @@ var startPosY = heightDiffH;
 
 var inf = 1000;
 
+function KillCharacter() {
+	characterNode.obj.remove(body.obj);
+	alive = false;
+}
+
 function CreateMeatBoy() {
 	var meat = new THREE.MeshLambertMaterial({ color: 0xbf000b });
+
+	characterNode = new ModelNode();
 
 	body = new BoxNode();
 	body.createObj(meat, 1.5, 1, 0.75);
 	// body.scale(0.5, 0.5, 0.5);
+	characterNode.addChild(body);
 
 	face = new TextureNode();
 	face.createObj(1, 1, 'images/meatboy.png', true, 1, 1, false);
@@ -70,36 +79,38 @@ function CreateMeatBoy() {
 	body.rotate(0, Math.PI/2, 0);
 	// body.rotate(0,0,0);
 
-	return body;
+	return characterNode;
 }
 
 function AnimateTest(time) {
 	var factor = time*24;
 
-	// Meat Boy
-	var armLRotation = new THREE.Euler();
-	armLRotation.x = 0.5*Math.sin(factor);
-	armLRotation.y = 0.5*Math.sin(factor);
+	if (alive) {
+		// Meat Boy
+		var armLRotation = new THREE.Euler();
+		armLRotation.x = 0.5*Math.sin(factor);
+		armLRotation.y = 0.5*Math.sin(factor);
 
-	shoulderL.applyRotation(armLRotation);
+		shoulderL.applyRotation(armLRotation);
 
-	var legLRotation = new THREE.Euler();
-	legLRotation.x = -0.5*Math.sin(factor);
-	hipL.applyRotation(legLRotation);
-	var legLTranslation = new THREE.Vector3(0, 0.05*Math.cos(factor) + 0.1, 0);
-	hipL.applyTranslation(legLTranslation);
+		var legLRotation = new THREE.Euler();
+		legLRotation.x = -0.5*Math.sin(factor);
+		hipL.applyRotation(legLRotation);
+		var legLTranslation = new THREE.Vector3(0, 0.05*Math.cos(factor) + 0.1, 0);
+		hipL.applyTranslation(legLTranslation);
 
-	var armRRotation = new THREE.Euler();
-	armRRotation.x = -0.5*Math.sin(factor);
-	armRRotation.y = -0.5*Math.sin(factor);
+		var armRRotation = new THREE.Euler();
+		armRRotation.x = -0.5*Math.sin(factor);
+		armRRotation.y = -0.5*Math.sin(factor);
 
-	shoulderR.applyRotation(armRRotation);
+		shoulderR.applyRotation(armRRotation);
 
-	var legRRotation = new THREE.Euler();
-	legRRotation.x = 0.5*Math.sin(factor);
-	hipR.applyRotation(legRRotation);
-	var legRTranslation = new THREE.Vector3(0, 0.05*Math.cos(factor) + 0.1, 0);
-	hipR.applyTranslation(legLTranslation);
+		var legRRotation = new THREE.Euler();
+		legRRotation.x = 0.5*Math.sin(factor);
+		hipR.applyRotation(legRRotation);
+		var legRTranslation = new THREE.Vector3(0, 0.05*Math.cos(factor) + 0.1, 0);
+		hipR.applyTranslation(legLTranslation);
+	}
 
 	// Chainsaws
 	_.each(chainsaws, function(chainsaw) {

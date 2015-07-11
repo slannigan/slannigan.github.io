@@ -1,6 +1,3 @@
-var particleContainer = null;
-var particleSystems = [];
-var particlesOn = true;
 var toggleParticles = false;
 
 document.addEventListener('keydown', function(e) {
@@ -12,39 +9,60 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-function GetParticleContainer() {
-	particleContainer = new ModelNode();
-	return particleContainer;
+var ParticleManager = function() {
+	this.container = new ModelNode();
+	this.particleSystems = [];
+	this.particlesOn = true;
 }
 
-function RenderParticles(time) {
-	// console.log("Rendering particles");
-	if (toggleParticles) {
-		particlesOn = !particlesOn;
-		toggleParticles = false;
-	}
+_.extend(ParticleManager.prototype, {
+	RenderParticles: function(time) {
+		// console.log("Rendering particles");
+		if (toggleParticles) {
+			this.particlesOn = !particlesOn;
+			toggleParticles = false;
+		}
 
-	if (particlesOn) {
-		// console.log("Particles: " + particleSystems[0].particles.length);
-		for (var i = 0; i < particleSystems.length; i++) {
-			if (particleSystems[i].isDead) {
-				continue;
-			}
-			var numDead = 0;
-			for (var j = 0; j < particleSystems[i].particles.length; j++) {
-				if (particleSystems[i].particles[j].isDead) {
-					numDead++;
+		if (this.particlesOn) {
+			// console.log("Particles: " + particleSystems[0].particles.length);
+			for (var i = 0; i < this.particleSystems.length; i++) {
+				if (this.particleSystems[i].isDead) {
 					continue;
 				}
+				var numDead = 0;
+				for (var j = 0; j < this.particleSystems[i].particles.length; j++) {
+					if (this.particleSystems[i].particles[j].isDead) {
+						numDead++;
+						continue;
+					}
 
-				particleSystems[i].particles[j].update(time);
-			}
-			if (numDead == particleSystems[i].particles.length) {
-				particleSystems[i].isDead = true;
+					this.particleSystems[i].particles[j].update(time);
+				}
+				if (numDead == this.particleSystems[i].particles.length) {
+					this.particleSystems[i].isDead = true;
+					this.container.removeChild(this.particleSystems[i].container);
+				}
 			}
 		}
+	},
+
+	createBloodSplatter: function(startPoint, directionVector, time) {
+		var startPointDistribution = new THREE.Vector3(0.1, 0.1, 0.1);
+		var sizeAvg = 0.2;
+		var sizeVar = 0.1;
+		var ttlAvg = 0.35;
+		var ttlVar = 0.15;
+		var hasGravity = true;
+		var creationRate = 50;
+		var image = "images/meatboy.png";
+		var alwaysOn = false;
+		
+		var particleSystem = new ParticleSystem(startPoint, startPointDistribution, directionVector, sizeAvg, sizeVar, ttlAvg, ttlVar, hasGravity, creationRate, image, alwaysOn, time);
+		// return particleSystem;
+		this.container.addChild(particleSystem.container);
+		this.particleSystems.push(particleSystem);
 	}
-}
+});
 
 var Particle = function(startPoint, speed, size, ttl, system) {
 	this.isDead = false;
@@ -65,7 +83,8 @@ _.extend(Particle.prototype, {
 		if (deltaTime >= this.ttl) {
 			// console.log("Dead");
 			this.isDead = true;
-			this.system.obj.remove(this.billboard.texture);
+			// this.system.obj.remove(this.billboard.texture);
+			this.system.container.removeChild(this.billboard.texture);
 			return;
 		}
 
@@ -81,7 +100,6 @@ var ParticleSystem = function(startPoint, startPointDistribution, directionVecto
 	this.isDead = false;
 	this.particles = [];
 	this.container = new ModelNode();
-	// this.obj = new THREE.Object3D();
 
 	this.startPoint = startPoint;
 	this.startPointDistribution = startPointDistribution;
@@ -108,7 +126,8 @@ var ParticleSystem = function(startPoint, startPointDistribution, directionVecto
 		this.createParticles();
 	}
 
-	particleSystems.push(this);
+	// particleSystems.push(this);
+	// particleContainer.addChild(this.container);
 }
 
 _.extend(ParticleSystem.prototype, {
@@ -129,23 +148,9 @@ _.extend(ParticleSystem.prototype, {
 			var size = this.sizeAvg + (Math.random() * 2 * this.sizeVar) - this.sizeVar;
 			var ttl = this.ttlAvg + (Math.random() * 2 * this.ttlVar) - this.ttlVar;
 
+			// Particle adds itself to parent in constructor
 			var particle = new Particle(startPoint, speed, size, ttl, this);
 			this.particles.push(particle);
 		}
 	}
 });
-
-var createBloodSplatter = function(startPoint, directionVector, time) {
-	var startPointDistribution = new THREE.Vector3(0.1, 0.1, 0.1);
-	var sizeAvg = 0.2;
-	var sizeVar = 0.1;
-	var ttlAvg = 0.35;
-	var ttlVar = 0.15;
-	var hasGravity = true;
-	var creationRate = 50;
-	var image = "../images/meatboy.png";
-	var alwaysOn = false;
-	
-	var particleSystem = new ParticleSystem(startPoint, startPointDistribution, directionVector, sizeAvg, sizeVar, ttlAvg, ttlVar, hasGravity, creationRate, image, alwaysOn, time);
-	return particleSystem;
-}

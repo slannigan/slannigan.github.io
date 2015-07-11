@@ -164,6 +164,8 @@ var Logic = function() {
 	this.firstCall = true;
 	this.isJumping = false;
 	this.isFalling = false;
+
+	this.particleManager = new ParticleManager();
 }
 // var output = 0;
 _.extend(Logic.prototype, {
@@ -208,6 +210,13 @@ _.extend(Logic.prototype, {
 			light.position.x += this.speed;
 		}
 	},
+	chainsawDeath: function(time, p1x, p1y) {
+		this.died = true;
+		this.audio.chainsawDeath();
+		var startPoint = new THREE.Vector3(p1x, p1y, 0.1);
+	    var directionVector = new THREE.Vector3(0,0.3,0);
+    	this.particleManager.createBloodSplatter(startPoint, directionVector, time);
+	},
 	animateCharacter: function(character, time) {
 		if (this.firstCall) {
 			this.firstCall = false;
@@ -250,16 +259,8 @@ _.extend(Logic.prototype, {
 							deltaX = 0;
 
 							if (geometry.isChainsaw()) {
-								this.died = true;
-								this.audio.chainsawDeath();
+								this.chainsawDeath(time, this.characterBound.maxX, this.characterBound.minY);
 							}
-
-							// if (output < 10) {
-							// 	output++;
-							// 	console.log("minX " + (this.characterBound.minX + deltaX) +
-							// 				", maxX " + (this.characterBound.maxX + deltaX) +
-							// 				" intersects with minX " + geometry.minX + ", maxX " + geometry.maxX);
-							// }
 						}
 					}
 					if (!intersectsY && !this.died) {
@@ -284,8 +285,7 @@ _.extend(Logic.prototype, {
 							this.initialVelocity = 0;
 
 							if (geometry.isChainsaw()) {
-								this.died = true;
-								this.audio.chainsawDeath();
+								this.chainsawDeath(time);
 							}
 						}
 					}
@@ -316,7 +316,12 @@ _.extend(Logic.prototype, {
 				this.audio.die();
 			}
 
+			if (this.died) KillCharacter();
+
 			character.translate(deltaX, deltaY, 0);
 		}
+	},
+	renderParticles: function(time) {
+		this.particleManager.RenderParticles(time);
 	}
 });

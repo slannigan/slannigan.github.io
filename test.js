@@ -13,11 +13,12 @@ var clock;
 function init() {
     canvasContainer = document.getElementById("canvas-container");
 
-    game = new Logic();
-
     // SCENE
     scene = new THREE.Scene();
     // scene.position.set(startX,0,0);
+    game = new Logic();
+    // scene.add(this.particleManager.container.obj);
+    scene.add(game.particleManager.container.obj);
  
     // CAMERA
     var SCREEN_WIDTH = 850;
@@ -59,13 +60,12 @@ function init() {
     level = CreateLevel();
     scene.add(level.obj);
 
-    particles = GetParticleContainer();
-    scene.add(particles.obj);
+    // particleManager = new ParticleManager();
+    // scene.add(particleManager.container.obj);
 
-    // var startPoint = new THREE.Vector3(0,0,0);
+    // var startPoint = new THREE.Vector3(15,0,0);
     // var directionVector = new THREE.Vector3(0,0.3,0);
-    // var testParticles = createBloodSplatter(startPoint, directionVector, 0);
-    // scene.add(testParticles.obj);
+    // game.particleManager.createBloodSplatter(startPoint, directionVector, 0);
 
     // Create light
     var light = new THREE.PointLight(0xffffff, 1.0);
@@ -91,9 +91,9 @@ function init() {
 
         game.moveScene(scene, camera, light, time);
         game.animateCharacter(character, time);
+        game.renderParticles(time);
 
         RenderTextures();
-        RenderParticles(time);
 
         renderer.render(scene, camera);
     };

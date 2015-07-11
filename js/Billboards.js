@@ -28,7 +28,8 @@ _.extend(Billboard.prototype, {
 		// this.texture.position.z += transZ;
 		this.texture.translate(transX, transY, transZ);
 
-		this.texture.scale.multiplyScalar(scale);
+		// this.texture.scale.multiplyScalar(scale);
+		this.texture.scale(scale, scale, scale);
 
 		this.faceCamera();
 	},

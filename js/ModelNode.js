@@ -18,6 +18,14 @@ _.extend(ModelNode.prototype, {
 		this.obj.updateMatrixWorld(true);
 	},
 
+	removeChild: function(child) {
+		var index = this.children.indexOf(child);
+        if (index !== -1) {
+            this.children.splice(index, 1);
+        }
+		this.obj.remove(child.obj);
+	},
+
 	translate: function(x, y, z) {
 		this.translation.x += x;
 		this.translation.y += y;
