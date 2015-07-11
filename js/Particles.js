@@ -48,13 +48,13 @@ _.extend(ParticleManager.prototype, {
 
 	createBloodSplatter: function(startPoint, directionVector, time) {
 		var startPointDistribution = new THREE.Vector3(0.1, 0.1, 0.1);
-		var sizeAvg = 0.2;
-		var sizeVar = 0.1;
-		var ttlAvg = 0.35;
+		var sizeAvg = 0.3;
+		var sizeVar = 0.2;
+		var ttlAvg = 0.45;
 		var ttlVar = 0.15;
 		var hasGravity = true;
 		var creationRate = 50;
-		var image = "images/meatboy.png";
+		var image = "images/blood.png";
 		var alwaysOn = false;
 		
 		var particleSystem = new ParticleSystem(startPoint, startPointDistribution, directionVector, sizeAvg, sizeVar, ttlAvg, ttlVar, hasGravity, creationRate, image, alwaysOn, time);

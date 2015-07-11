@@ -211,11 +211,17 @@ _.extend(Logic.prototype, {
 			light.position.x += this.characterSpeed;
 		}
 	},
-	chainsawDeath: function(time, p1x, p1y) {
+	chainsawDeath: function(time, deltax, deltay, saw) {
 		this.died = true;
 		this.audio.chainsawDeath();
-		var startPoint = new THREE.Vector3(p1x, p1y, 0.1);
-	    var directionVector = new THREE.Vector3(0,0.3,0);
+
+		var p1x = this.characterBound.maxX;
+		var p1y = this.characterBound.minY;
+		var startPoint = new THREE.Vector3(p1x, p1y, 0);
+
+		var speedX = 0.3*(p1x - saw.centreX)*Math.abs(deltax);
+		var speedY = 0.3*(p1y - saw.centreY)*Math.abs(deltay) + 0.2;
+	    var directionVector = new THREE.Vector3(speedX,speedY,0);
     	this.particleManager.createBloodSplatter(startPoint, directionVector, time);
 	},
 	animateCharacter: function(character, time) {
@@ -256,12 +262,13 @@ _.extend(Logic.prototype, {
 												this.characterBound.maxX + deltaX,
 												this.characterBound.minY,
 												this.characterBound.maxY)) {
-							intersectsX = true;
-							deltaX = 0;
 
 							if (geometry.isChainsaw()) {
-								this.chainsawDeath(time, this.characterBound.maxX, this.characterBound.minY);
+								this.chainsawDeath(time, deltaX, deltaY, geometry);
 							}
+
+							intersectsX = true;
+							deltaX = 0;
 						}
 					}
 					if (!intersectsY && !this.died) {
