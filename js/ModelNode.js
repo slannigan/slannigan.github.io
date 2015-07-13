@@ -1,6 +1,30 @@
-var xAxis = new THREE.Vector3(1,0,0);
-var yAxis = new THREE.Vector3(0,1,0);
-var zAxis = new THREE.Vector3(0,0,1);
+var NodeManager = function(textureManager) {
+	this.textureManager = textureManager;
+}
+
+_.extend(NodeManager.prototype, {
+	CreateModelNode: function() {
+		var node = new ModelNode();
+		return node;
+	},
+
+	CreateBoxNode: function(material, width, height, depth) {
+		var box = new BoxNode();
+		box.createObj(material, width, height, depth);
+		return box;
+	},
+
+	CreateJointNode: function() {
+		var joint = new JointNode();
+		return joint;
+	},
+
+	CreateTextureNode: function(planeSizeX, planeSizeY, textureImage, tile, textureSizeX, textureSizeY, isBg) {
+		var texture = new TextureNode();
+		texture.obj = this.textureManager.CreateTexture(planeSizeX, planeSizeY, textureImage, tile, textureSizeX, textureSizeY, isBg);
+		return texture;
+	}
+});
 
 var ModelNode = function() {
 	this.parent = null;
@@ -148,7 +172,5 @@ var TextureNode = function() {
 
 // Inherit all other methods of ModelNode.
 _.extend(TextureNode.prototype, ModelNode.prototype, {
-	createObj: function(planeSizeX, planeSizeY, textureImage, tile, textureSizeX, textureSizeY, isBg) {
-		this.obj = textureManager.CreateTexture(planeSizeX, planeSizeY, textureImage, tile, textureSizeX, textureSizeY, isBg)
-	}
+
 });

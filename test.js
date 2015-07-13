@@ -7,6 +7,7 @@ var character = null;
 var level = null;
 var particles = null;
 var textureManager = null;
+var nodeManager = null;
 
 var clock;
  
@@ -56,6 +57,7 @@ function init() {
     // scene.add(character);
 
     textureManager = new TextureManager();
+    nodeManager = new NodeManager(textureManager);
 
     character = CreateMeatBoy();
     scene.add(character.obj);

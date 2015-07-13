@@ -23,53 +23,46 @@ function KillCharacter() {
 function CreateMeatBoy() {
 	var meat = new THREE.MeshLambertMaterial({ color: 0xbf000b });
 
-	characterNode = new ModelNode();
+	characterNode = nodeManager.CreateModelNode();
 
-	body = new BoxNode();
-	body.createObj(meat, 1.5, 1, 0.75);
-	// body.scale(0.5, 0.5, 0.5);
+	body = nodeManager.CreateBoxNode(meat, 1.5, 1, 0.75);
 	characterNode.addChild(body);
 
-	face = new TextureNode();
-	face.createObj(1, 1, 'images/meatboy.png', true, 1, 1, false);
+	face = nodeManager.CreateTextureNode(1, 1, 'images/meatboy.png', true, 1, 1, false);
 	body.addChild(face);
 	face.translate(0, 0, 0.377);
 
-	shoulderL = new JointNode();
+	shoulderL = nodeManager.CreateJointNode();
 	body.addChild(shoulderL);
 	shoulderL.translate(0.75, 0, 0);
 	shoulderL.rotate(0,0,-0.5);
 
-	armL = new BoxNode();
-	armL.createObj(meat, 0.6, 0.3, 0.3);
+	armL = nodeManager.CreateBoxNode(meat, 0.6, 0.3, 0.3);
 	shoulderL.addChild(armL);
 	armL.translate(0.1, -0.15, 0);
 
-	shoulderR = new JointNode();
+	shoulderR = nodeManager.CreateJointNode();
 	body.addChild(shoulderR);
 	shoulderR.translate(-0.75, 0, 0);
 	shoulderR.rotate(0,0,0.5);
 
-	armR = new BoxNode();
-	armR.createObj(meat, 0.6, 0.3, 0.3);
+	armR = nodeManager.CreateBoxNode(meat, 0.6, 0.3, 0.3);
 	shoulderR.addChild(armR);
 	armR.translate(-0.1, -0.15, 0);
 
-	hipL = new JointNode();
+	hipL = nodeManager.CreateJointNode();
 	body.addChild(hipL);
 	hipL.translate(0.4, -0.5, 0);
 
-	legL = new BoxNode();
-	legL.createObj(meat, 0.5, 0.5, 0.5);
+	legL = nodeManager.CreateBoxNode(meat, 0.5, 0.5, 0.5);
 	hipL.addChild(legL);
 	legL.translate(0, -0.05, 0);
 
-	hipR = new JointNode();
+	hipR = nodeManager.CreateJointNode();
 	body.addChild(hipR);
 	hipR.translate(-0.4, -0.5, 0);
 
-	legR = new BoxNode();
-	legR.createObj(meat, 0.5, 0.3, 0.5);
+	legR = nodeManager.CreateBoxNode(meat, 0.5, 0.3, 0.5);
 	hipR.addChild(legR);
 	legR.translate(0, -0.15, 0);
 
@@ -121,30 +114,24 @@ function CreateBuildingBlock(length, isFlipped) {
 	var boxLength = length * unitSize;
 	var boxHeight = 30;
 	var boxDepth = unitSize;
-	var building = new BoxNode();
-	building.createObj(buildingMat, boxLength, boxHeight, boxDepth);
+	var building = nodeManager.CreateBoxNode(buildingMat, boxLength, boxHeight, boxDepth);
 
 	// Textures
-	var front = new TextureNode();
-	front.createObj(boxLength, boxHeight, "images/brick.png", true, unitSize, unitSize, false);
+	var front = nodeManager.CreateTextureNode(boxLength, boxHeight, "images/brick.png", true, unitSize, unitSize, false);
 	front.translate(0,0,(boxDepth/2) + 0.001)
 	building.addChild(front);
 
-	var right = new TextureNode();
-	right.createObj(boxDepth, boxHeight, "images/brick.png", true, unitSize, unitSize, false);
+	var right = nodeManager.CreateTextureNode(boxDepth, boxHeight, "images/brick.png", true, unitSize, unitSize, false);
 	right.rotate(0, Math.PI/2, 0);
 	right.translate((boxLength/2) + 0.001, 0, 0);
 	building.addChild(right);
 
-	var left = new TextureNode();
-	left.createObj(boxDepth, boxHeight, "images/brick.png", true, unitSize, unitSize, false);
+	var left = nodeManager.CreateTextureNode(boxDepth, boxHeight, "images/brick.png", true, unitSize, unitSize, false);
 	left.rotate(0, -Math.PI/2, 0);
 	left.translate(-((boxLength/2) + 0.001), 0, 0);
 	building.addChild(left);
 
-	// var buildin
-
-	var buildingNode = new ModelNode();
+	var buildingNode = nodeManager.CreateModelNode();
 	buildingNode.addChild(building);
 
 	buildingNode.translate(boxLength/2, 0, 0);
@@ -189,7 +176,7 @@ function CreateBuilding(type, length, horizontalOffset) {
 		}
 	}
 
-	var group = new ModelNode();
+	var group = nodeManager.CreateModelNode();
 	group.addChild(building1);
 	if (!_.isNull(building2)) {
 		group.addChild(building2);
@@ -214,14 +201,9 @@ function CreateChainsaw(type, prevType, horizontalOffset, scale) {
 	else if (prevType == "l" || prevType == "L") {
 		verticalOffset += heightDiffL;
 	}
-
-	// var chainsaw = new BoxNode();
-	// var diameter = unitSize*0.9*scale;
-	// chainsaw.createObj(tempMat, diameter, diameter, 0.1);
-
-	var chainsaw = new TextureNode();
+	
 	var diameter = unitSize*0.9*scale;
-	chainsaw.createObj(diameter, diameter, "images/saw.png", false, diameter, diameter, false);
+	var chainsaw = nodeManager.CreateTextureNode(diameter, diameter, "images/saw.png", false, diameter, diameter, false);
 	chainsaw.translate(horizontalOffset*unitSize + (unitSize/2), verticalOffset, 0);
 	chainsaws.push(chainsaw);
 
@@ -240,7 +222,8 @@ function CreateLevel(map) {
 		// map = "lllllllcllllHHHHHHlllllllllllllllllllllllllllllllllllll";
 		map = "HHHHH..llllll.llllllclll...MMMMMMMcMMM...lllllcHHH..."
 	}
-	var mapNode = new ModelNode();
+
+	var mapNode = nodeManager.CreateModelNode();
 
 	if (!_.isUndefined(game)) {
 		game.storeMapInfo(map, unitSize, startPosX, startPosY)
@@ -273,13 +256,12 @@ function CreateLevel(map) {
 	// Background 
 	var bgWidth = 2048;
 	var bgHeight = 512;
-	var bg1 = new TextureNode();
-	bg1.createObj(bgWidth, bgHeight, 'images/bg1.png', false, bgWidth, bgHeight, true);
+
+	var bg1 = nodeManager.CreateTextureNode(bgWidth, bgHeight, 'images/bg1.png', false, bgWidth, bgHeight, true);
 	mapNode.addChild(bg1);
 	bg1.translate(700,-150,-350);
 
-	var bg2 = new TextureNode();
-	bg2.createObj(bgWidth*3, bgHeight, 'images/bg2.png', true, bgWidth, bgHeight, true);
+	var bg2 = nodeManager.CreateTextureNode(bgWidth*3, bgHeight, 'images/bg2.png', true, bgWidth, bgHeight, true);
 	mapNode.addChild(bg2);
 	bg2.translate(2000, -50, -800);
 
