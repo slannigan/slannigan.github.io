@@ -6,6 +6,7 @@ var canvasContainer;
 var character = null;
 var level = null;
 var particles = null;
+var textureManager = null;
 
 var clock;
  
@@ -54,6 +55,8 @@ function init() {
     // // textures.push(character)
     // scene.add(character);
 
+    textureManager = new TextureManager();
+
     character = CreateMeatBoy();
     scene.add(character.obj);
 
@@ -85,6 +88,8 @@ function init() {
 
         time = clock.getElapsedTime();
 
+        textureManager.VerifyTexturesOn();
+
         // character.rotation.y = Math.sin(clock.getElapsedTime());
         // character.rotation.y = -0.5;
         AnimateTest(time);
@@ -92,8 +97,6 @@ function init() {
         game.moveScene(scene, camera, light, time);
         game.animateCharacter(character, time);
         game.renderParticles(time);
-
-        RenderTextures();
 
         renderer.render(scene, camera);
     };

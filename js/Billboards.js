@@ -12,10 +12,8 @@ document.addEventListener('keydown', function(e) {
 
 var Billboard = function(width, height, location, image) {
 	// Create texture, place at given location
-	// this.texture = TextureMapper(width, height, image, false, width, height, false);
 	this.texture = new TextureNode();
 	this.texture.createObj(width, height, image, false, width, height, false);
-	// this.texture.position.set(location.x, location.y, location.z);
 	this.texture.translate(location.x, location.y, location.z);
 
 	this.faceCamera();
@@ -23,12 +21,7 @@ var Billboard = function(width, height, location, image) {
 
 _.extend(Billboard.prototype, {
 	update: function(transX, transY, transZ, scale) {
-		// this.texture.position.x += transX;
-		// this.texture.position.y += transY;
-		// this.texture.position.z += transZ;
 		this.texture.translate(transX, transY, transZ);
-
-		// this.texture.scale.multiplyScalar(scale);
 		this.texture.scale(scale, scale, scale);
 
 		this.faceCamera();
