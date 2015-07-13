@@ -1,3 +1,5 @@
+// Logic is dependent on ParticleManager.
+
 var spacePressed = false;
 var spacePressedTime;
 
@@ -131,7 +133,7 @@ _.extend(BoundingCircle.prototype, BoundingGeometry.prototype, {
 	}
 });
 
-var Logic = function() {
+var Logic = function(nodeManager) {
 	this.map = "";
 	this.unitSize = 1; // Default value
 
@@ -166,7 +168,7 @@ var Logic = function() {
 	this.isJumping = false;
 	this.isFalling = false;
 
-	this.particleManager = new ParticleManager();
+	this.particleManager = new ParticleManager(nodeManager);
 }
 // var output = 0;
 _.extend(Logic.prototype, {

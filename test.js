@@ -18,7 +18,11 @@ function init() {
     // SCENE
     scene = new THREE.Scene();
     // scene.position.set(startX,0,0);
-    game = new Logic();
+
+    textureManager = new TextureManager();
+    nodeManager = new NodeManager(textureManager);
+    // nodeManager = new NodeManager();
+    game = new Logic(nodeManager);
     // scene.add(this.particleManager.container.obj);
     scene.add(game.particleManager.container.obj);
  
@@ -55,9 +59,6 @@ function init() {
     // }
     // // textures.push(character)
     // scene.add(character);
-
-    textureManager = new TextureManager();
-    nodeManager = new NodeManager(textureManager);
 
     character = CreateMeatBoy();
     scene.add(character.obj);

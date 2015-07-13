@@ -1,5 +1,9 @@
+// If we wish to have textures, NodeManager is dependent on TextureManager.
+// Otherwise, textures will be replaced with green squares.
+
 var NodeManager = function(textureManager) {
 	this.textureManager = textureManager;
+	this.materialForNoTextures = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
 }
 
 _.extend(NodeManager.prototype, {
@@ -20,9 +24,21 @@ _.extend(NodeManager.prototype, {
 	},
 
 	CreateTextureNode: function(planeSizeX, planeSizeY, textureImage, tile, textureSizeX, textureSizeY, isBg) {
-		var texture = new TextureNode();
-		texture.obj = this.textureManager.CreateTexture(planeSizeX, planeSizeY, textureImage, tile, textureSizeX, textureSizeY, isBg);
-		return texture;
+		// If no TextureManager exists, create a green square instead
+		if (_.isUndefined(this.textureManager)) {
+			if (!isBg) {
+				return this.CreateBoxNode(this.materialForNoTextures, planeSizeX, planeSizeY, 0.01);
+			}
+			else {
+				return this.CreateJointNode();
+			}
+		}
+		// If TextureManager exists, create texture
+		else {
+			var texture = new TextureNode();
+			texture.obj = this.textureManager.CreateTexture(planeSizeX, planeSizeY, textureImage, tile, textureSizeX, textureSizeY, isBg);
+			return texture;
+		}
 	}
 });
 

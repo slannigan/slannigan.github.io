@@ -1,16 +1,28 @@
-var billboardsOn = true;
-var toggleBillboards = false;
+var BillboardManager = function(nodeManager) {
+	this.nodeManager = nodeManager;
+	this.billboardsOn = true;
+	this.toggleBillboards = false;
 
-document.addEventListener('keydown', function(e) {
-    // http://www.javascriptkit.com/javatutors/javascriptkey2.shtml
-    var unicode = e.keyCode? e.keyCode : e.charCode;
+	var self = this;
 
-    if (unicode == 66) {      // 'b' key
-        toggleBillboards = true;
-    }
+	document.addEventListener('keydown', function(e) {
+	    // http://www.javascriptkit.com/javatutors/javascriptkey2.shtml
+	    var unicode = e.keyCode? e.keyCode : e.charCode;
+
+	    if (unicode == 66) {      // 'b' key
+	        self.toggleBillboards = true;
+	    }
+	});
+}
+
+_.extend(BillboardManager.prototype, {
+	CreateBillboard: function(width, height, location, image) {
+		var billboard = new Billboard(this.nodeManager, width, height, location, image);
+		return billboard;
+	}
 });
 
-var Billboard = function(width, height, location, image) {
+var Billboard = function(nodeManager, width, height, location, image) {
 	// Create texture, place at given location
 	this.texture = nodeManager.CreateTextureNode(width, height, image, false, width, height, false);
 	this.texture.translate(location.x, location.y, location.z);
@@ -27,12 +39,12 @@ _.extend(Billboard.prototype, {
 	},
 
 	faceCamera: function() {
-		if (toggleBillboards) {
-			billBoardsOn = !billBoardsOn;
-			toggleBillboards = false;
+		if (this.toggleBillboards) {
+			this.billBoardsOn = !this.billBoardsOn;
+			this.toggleBillboards = false;
 		}
 
-		if (billboardsOn) {
+		if (this.billboardsOn) {
 			// TODO: Make billboards face camera
 		}
 	}

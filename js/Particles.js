@@ -9,10 +9,13 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-var ParticleManager = function() {
-	this.container = new ModelNode();
+var ParticleManager = function(nodeManager) {
+	this.nodeManager = nodeManager;
+	this.container = this.nodeManager.CreateModelNode();
 	this.particleSystems = [];
 	this.particlesOn = true;
+
+	this.billboardManager = new BillboardManager(nodeManager);
 }
 
 _.extend(ParticleManager.prototype, {
@@ -57,7 +60,7 @@ _.extend(ParticleManager.prototype, {
 		var image = "images/blood.png";
 		var alwaysOn = false;
 		
-		var particleSystem = new ParticleSystem(startPoint, startPointDistribution, directionVector, sizeAvg, sizeVar, ttlAvg, ttlVar, hasGravity, creationRate, image, alwaysOn, time);
+		var particleSystem = new ParticleSystem(this.nodeManager, this.billboardManager, startPoint, startPointDistribution, directionVector, sizeAvg, sizeVar, ttlAvg, ttlVar, hasGravity, creationRate, image, alwaysOn, time);
 		// return particleSystem;
 		this.container.addChild(particleSystem.container);
 		this.particleSystems.push(particleSystem);
@@ -71,7 +74,8 @@ var Particle = function(startPoint, speed, size, ttl, system) {
 	this.ttl = ttl;
 	this.system = system;
 
-	this.billboard = new Billboard(size, size, startPoint, system.image);
+	// this.billboard = new Billboard(size, size, startPoint, system.image);
+	this.billboard = this.system.billboardManager.CreateBillboard(size, size, startPoint, system.image);
 	// this.system.obj.add(this.billboard.texture);
 	this.system.container.addChild(this.billboard.texture);
 }
@@ -96,10 +100,13 @@ _.extend(Particle.prototype, {
 	}
 });
 
-var ParticleSystem = function(startPoint, startPointDistribution, directionVector, sizeAvg, sizeVar, ttlAvg, ttlVar, hasGravity, creationRate, image, alwaysOn, time) {
+var ParticleSystem = function(nodeManager, billboardManager, startPoint, startPointDistribution, directionVector, sizeAvg, sizeVar, ttlAvg, ttlVar, hasGravity, creationRate, image, alwaysOn, time) {
+	this.nodeManager = nodeManager;
+	this.billboardManager = billboardManager;
+
 	this.isDead = false;
 	this.particles = [];
-	this.container = new ModelNode();
+	this.container = nodeManager.CreateModelNode();
 
 	this.startPoint = startPoint;
 	this.startPointDistribution = startPointDistribution;
