@@ -1,270 +1,293 @@
-var characterNode, body, armR, armL, legR, legL, face;
-var shoulderR, shoulderL, hipR, hipL;
-var chainsaws = [];
-var alive = true;
+var ModelManager = function(nodeManager) {
+	this.nodeManager = nodeManager;
 
-var floorCeilingGap = 5;
-var heightDiffH = 6
-var heightDiffL = -6;
-var unitSize = 3;
-// dark: 8d8a9f, light: 0xb5b2c5
-var buildingMat = new THREE.MeshLambertMaterial({ color: 0x8d8a9f });
+	// Character geometry
+	this.body;
+	this.armR;
+	this.armL;
+	this.legR;
+	this.legL;
+	this.face;
 
-var startPosX = 2;
-var startPosY = heightDiffH;
+	// Character joints/nodes
+	this.characterNode;
+	this.shoulderR;
+	this.shoulderL;
+	this.hipR;
+	this.hipL;
 
-var inf = 1000;
+	// Building and chainsaw objects
+	this.chainsaws = [];
 
-function KillCharacter() {
-	characterNode.obj.remove(body.obj);
-	alive = false;
+	// Map characteristics
+	this.floorCeilingGap = 5;
+	this.heightDiffH = 6;
+	this.heightDiffL = -6;
+	this.unitSize = 3;
+	this.buildingMat = new THREE.MeshLambertMaterial({ color: 0x8d8a9f });
+	this.bgWidth = 2048;
+	this.bgHeight = 512;
+
+	// Character characteristics
+	this.startPosX = 2;
+	this.startPosY = this.heightDiffH;
+	this.meat = new THREE.MeshLambertMaterial({ color: 0xbf000b });
+	this.alive = true;
+
+	// Other
+	this.inf = 1000;
 }
 
-function CreateMeatBoy() {
-	var meat = new THREE.MeshLambertMaterial({ color: 0xbf000b });
+// Character related functions
+_.extend(ModelManager.prototype, {
+	KillCharacter: function() {
+		this.characterNode.obj.remove(this.body.obj);
+		this.alive = false;
+	},
 
-	characterNode = nodeManager.CreateModelNode();
+	CreateMeatBoy: function() {
+		this.characterNode = this.nodeManager.CreateModelNode();
 
-	body = nodeManager.CreateBoxNode(meat, 1.5, 1, 0.75);
-	characterNode.addChild(body);
+		this.body = this.nodeManager.CreateBoxNode(this.meat, 1.5, 1, 0.75);
+		this.characterNode.addChild(this.body);
 
-	face = nodeManager.CreateTextureNode(1, 1, 'images/meatboy.png', true, 1, 1, false);
-	body.addChild(face);
-	face.translate(0, 0, 0.377);
+		this.face = this.nodeManager.CreateTextureNode(1, 1, 'images/meatboy.png', true, 1, 1, false);
+		this.body.addChild(this.face);
+		this.face.translate(0, 0, 0.377);
 
-	shoulderL = nodeManager.CreateJointNode();
-	body.addChild(shoulderL);
-	shoulderL.translate(0.75, 0, 0);
-	shoulderL.rotate(0,0,-0.5);
+		this.shoulderL = this.nodeManager.CreateJointNode();
+		this.body.addChild(this.shoulderL);
+		this.shoulderL.translate(0.75, 0, 0);
+		this.shoulderL.rotate(0,0,-0.5);
 
-	armL = nodeManager.CreateBoxNode(meat, 0.6, 0.3, 0.3);
-	shoulderL.addChild(armL);
-	armL.translate(0.1, -0.15, 0);
+		this.armL = this.nodeManager.CreateBoxNode(this.meat, 0.6, 0.3, 0.3);
+		this.shoulderL.addChild(this.armL);
+		this.armL.translate(0.1, -0.15, 0);
 
-	shoulderR = nodeManager.CreateJointNode();
-	body.addChild(shoulderR);
-	shoulderR.translate(-0.75, 0, 0);
-	shoulderR.rotate(0,0,0.5);
+		this.shoulderR = this.nodeManager.CreateJointNode();
+		this.body.addChild(this.shoulderR);
+		this.shoulderR.translate(-0.75, 0, 0);
+		this.shoulderR.rotate(0,0,0.5);
 
-	armR = nodeManager.CreateBoxNode(meat, 0.6, 0.3, 0.3);
-	shoulderR.addChild(armR);
-	armR.translate(-0.1, -0.15, 0);
+		this.armR = this.nodeManager.CreateBoxNode(this.meat, 0.6, 0.3, 0.3);
+		this.shoulderR.addChild(this.armR);
+		this.armR.translate(-0.1, -0.15, 0);
 
-	hipL = nodeManager.CreateJointNode();
-	body.addChild(hipL);
-	hipL.translate(0.4, -0.5, 0);
+		this.hipL = this.nodeManager.CreateJointNode();
+		this.body.addChild(this.hipL);
+		this.hipL.translate(0.4, -0.5, 0);
 
-	legL = nodeManager.CreateBoxNode(meat, 0.5, 0.5, 0.5);
-	hipL.addChild(legL);
-	legL.translate(0, -0.05, 0);
+		this.legL = this.nodeManager.CreateBoxNode(this.meat, 0.5, 0.5, 0.5);
+		this.hipL.addChild(this.legL);
+		this.legL.translate(0, -0.05, 0);
 
-	hipR = nodeManager.CreateJointNode();
-	body.addChild(hipR);
-	hipR.translate(-0.4, -0.5, 0);
+		this.hipR = this.nodeManager.CreateJointNode();
+		this.body.addChild(this.hipR);
+		this.hipR.translate(-0.4, -0.5, 0);
 
-	legR = nodeManager.CreateBoxNode(meat, 0.5, 0.3, 0.5);
-	hipR.addChild(legR);
-	legR.translate(0, -0.15, 0);
+		this.legR = this.nodeManager.CreateBoxNode(this.meat, 0.5, 0.3, 0.5);
+		this.hipR.addChild(this.legR);
+		this.legR.translate(0, -0.15, 0);
 
-	// Transform to starting position
-	body.translate(startPosX, startPosY + 0.75 + 0.2, 0);
-	body.resetRotationOrder('ZYX');
-	body.rotate(0, Math.PI/2, -0.25);
+		// Transform to starting position
+		this.body.translate(this.startPosX, this.startPosY + 0.75 + 0.2, 0);
+		this.body.resetRotationOrder('ZYX');
+		this.body.rotate(0, Math.PI/2, -0.25);
 
-	return characterNode;
-}
+		return this.characterNode;
+	},
 
-function AnimateTest(time) {
-	var factor = time*24;
+	AnimateTest: function(time) {
+		var factor = time*24;
 
-	if (alive) {
-		// Meat Boy
-		var armLRotation = new THREE.Euler();
-		armLRotation.x = 0.5*Math.sin(factor);
-		armLRotation.y = 0.5*Math.sin(factor);
+		if (this.alive) {
+			// Meat Boy
+			var armLRotation = new THREE.Euler();
+			armLRotation.x = 0.5*Math.sin(factor);
+			armLRotation.y = 0.5*Math.sin(factor);
 
-		shoulderL.applyRotation(armLRotation);
+			this.shoulderL.applyRotation(armLRotation);
 
-		var legLRotation = new THREE.Euler();
-		legLRotation.x = -0.5*Math.sin(factor);
-		hipL.applyRotation(legLRotation);
-		var legLTranslation = new THREE.Vector3(0, 0.05*Math.cos(factor) + 0.1, 0);
-		hipL.applyTranslation(legLTranslation);
+			var legLRotation = new THREE.Euler();
+			legLRotation.x = -0.5*Math.sin(factor);
+			this.hipL.applyRotation(legLRotation);
+			var legLTranslation = new THREE.Vector3(0, 0.05*Math.cos(factor) + 0.1, 0);
+			this.hipL.applyTranslation(legLTranslation);
 
-		var armRRotation = new THREE.Euler();
-		armRRotation.x = -0.5*Math.sin(factor);
-		armRRotation.y = -0.5*Math.sin(factor);
+			var armRRotation = new THREE.Euler();
+			armRRotation.x = -0.5*Math.sin(factor);
+			armRRotation.y = -0.5*Math.sin(factor);
 
-		shoulderR.applyRotation(armRRotation);
+			this.shoulderR.applyRotation(armRRotation);
 
-		var legRRotation = new THREE.Euler();
-		legRRotation.x = 0.5*Math.sin(factor);
-		hipR.applyRotation(legRRotation);
-		var legRTranslation = new THREE.Vector3(0, 0.05*Math.cos(factor) + 0.1, 0);
-		hipR.applyTranslation(legLTranslation);
+			var legRRotation = new THREE.Euler();
+			legRRotation.x = 0.5*Math.sin(factor);
+			this.hipR.applyRotation(legRRotation);
+			var legRTranslation = new THREE.Vector3(0, 0.05*Math.cos(factor) + 0.1, 0);
+			this.hipR.applyTranslation(legLTranslation);
+		}
+
+		// Chainsaws
+		_.each(this.chainsaws, function(chainsaw) {
+			chainsaw.rotate(0,0,-0.1);
+		});
 	}
+});
 
-	// Chainsaws
-	_.each(chainsaws, function(chainsaw) {
-		chainsaw.rotate(0,0,-0.1);
-	});
-}
+// Level/map related functions
+_.extend(ModelManager.prototype, {
+	CreateBuildingBlock: function(length, isFlipped) {
+		var boxLength = length * this.unitSize;
+		var boxHeight = 30;
+		var boxDepth = this.unitSize;
+		var building = this.nodeManager.CreateBoxNode(this.buildingMat, boxLength, boxHeight, boxDepth);
 
-function CreateBuildingBlock(length, isFlipped) {
-	var boxLength = length * unitSize;
-	var boxHeight = 30;
-	var boxDepth = unitSize;
-	var building = nodeManager.CreateBoxNode(buildingMat, boxLength, boxHeight, boxDepth);
+		// Textures
+		var front = this.nodeManager.CreateTextureNode(boxLength, boxHeight, "images/brick.png", true, this.unitSize, this.unitSize, false);
+		front.translate(0,0,(boxDepth/2) + 0.001)
+		building.addChild(front);
 
-	// Textures
-	var front = nodeManager.CreateTextureNode(boxLength, boxHeight, "images/brick.png", true, unitSize, unitSize, false);
-	front.translate(0,0,(boxDepth/2) + 0.001)
-	building.addChild(front);
+		var right = this.nodeManager.CreateTextureNode(boxDepth, boxHeight, "images/brick.png", true, this.unitSize, this.unitSize, false);
+		right.rotate(0, Math.PI/2, 0);
+		right.translate((boxLength/2) + 0.001, 0, 0);
+		building.addChild(right);
 
-	var right = nodeManager.CreateTextureNode(boxDepth, boxHeight, "images/brick.png", true, unitSize, unitSize, false);
-	right.rotate(0, Math.PI/2, 0);
-	right.translate((boxLength/2) + 0.001, 0, 0);
-	building.addChild(right);
+		var left = this.nodeManager.CreateTextureNode(boxDepth, boxHeight, "images/brick.png", true, this.unitSize, this.unitSize, false);
+		left.rotate(0, -Math.PI/2, 0);
+		left.translate(-((boxLength/2) + 0.001), 0, 0);
+		building.addChild(left);
 
-	var left = nodeManager.CreateTextureNode(boxDepth, boxHeight, "images/brick.png", true, unitSize, unitSize, false);
-	left.rotate(0, -Math.PI/2, 0);
-	left.translate(-((boxLength/2) + 0.001), 0, 0);
-	building.addChild(left);
+		var buildingNode = this.nodeManager.CreateModelNode();
+		buildingNode.addChild(building);
 
-	var buildingNode = nodeManager.CreateModelNode();
-	buildingNode.addChild(building);
+		buildingNode.translate(boxLength/2, 0, 0);
 
-	buildingNode.translate(boxLength/2, 0, 0);
+		if (isFlipped) {
+			building.translate(0, boxHeight/2, 0);
+		}
+		else {
+			building.translate(0, -boxHeight/2, 0);
+		}
 
-	if (isFlipped) {
-		building.translate(0, boxHeight/2, 0);
-	}
-	else {
-		building.translate(0, -boxHeight/2, 0);
-	}
+		return buildingNode;
+	},
 
-	return buildingNode;
-}
+	CreateBuilding: function(type, length, horizontalOffset) {
+		if (type == "s") type = "H";
+		if (type == "e") type = "l";
 
-function CreateBuilding(type, length, horizontalOffset) {
-	if (type == "s") type = "H";
-	if (type == "e") type = "l";
+		var building1 = this.CreateBuildingBlock(length, false);
+		var building2 = null;
+		var verticalOffset = 0;
 
-	var building1 = CreateBuildingBlock(length, false);
-	var building2 = null;
-	var verticalOffset = 0;
+		if (type == "H" || type == "M" || type == "L") {
+			building2 = this.CreateBuildingBlock(length, true);
+			building2.translate(0, this.floorCeilingGap, 0);
+		}
 
-	if (type == "H" || type == "M" || type == "L") {
-		building2 = CreateBuildingBlock(length, true);
-		building2.translate(0, floorCeilingGap, 0);
-	}
+		if (type == "h" || type == "H") {
+			verticalOffset = this.heightDiffH;
+		}
+		else if (type == "l" || type == "L") {
+			verticalOffset = this.heightDiffL;
+		}
 
-	if (type == "h" || type == "H") {
-		verticalOffset = heightDiffH;
-	}
-	else if (type == "l" || type == "L") {
-		verticalOffset = heightDiffL;
-	}
+		var minX = horizontalOffset * this.unitSize;
+		var maxX = (horizontalOffset + length) * this.unitSize;
 
-	var minX = horizontalOffset*unitSize;
-	var maxX = (horizontalOffset + length) * unitSize;
+		for (var i = horizontalOffset; i < horizontalOffset + length; i ++) {
+			game.addBoundingBox(i, minX, maxX, -this.inf, verticalOffset);
+			if (!_.isNull(building2)) {
+				game.addBoundingBox(i, minX, maxX, verticalOffset + this.floorCeilingGap, this.inf);
+			}
+		}
 
-	for (var i = horizontalOffset; i < horizontalOffset + length; i ++) {
-		game.addBoundingBox(i, minX, maxX, -inf, verticalOffset);
+		var group = this.nodeManager.CreateModelNode();
+		group.addChild(building1);
 		if (!_.isNull(building2)) {
-			game.addBoundingBox(i, minX, maxX, verticalOffset + floorCeilingGap, inf);
-		}
-	}
-
-	var group = nodeManager.CreateModelNode();
-	group.addChild(building1);
-	if (!_.isNull(building2)) {
-		group.addChild(building2);
-	}
-
-	group.translate(horizontalOffset*unitSize, verticalOffset, 0);
-	// group.translate(horizontalOffset*unitSize, 0, 0);
-
-	return group;
-}
-
-var tempMat = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
-function CreateChainsaw(type, prevType, horizontalOffset, scale) {
-	var verticalOffset = 0;
-	if (type == "C") {
-		verticalOffset += floorCeilingGap;
-	}
-
-	if (prevType == "h" || prevType == "H") {
-		verticalOffset += heightDiffH;
-	}
-	else if (prevType == "l" || prevType == "L") {
-		verticalOffset += heightDiffL;
-	}
-	
-	var diameter = unitSize*0.9*scale;
-	var chainsaw = nodeManager.CreateTextureNode(diameter, diameter, "images/saw.png", false, diameter, diameter, false);
-	chainsaw.translate(horizontalOffset*unitSize + (unitSize/2), verticalOffset, 0);
-	chainsaws.push(chainsaw);
-
-	// console.log("Creating bounding circle at offset " + horizontalOffset + ", x, y, d: " + chainsaw.translation.x + ", " + chainsaw.translation.y + ", " + diameter);
-	game.addBoundingCircle(horizontalOffset, chainsaw.translation.x, chainsaw.translation.y, diameter/2)
-
-	return chainsaw;
-}
-
-function CreateLevel(map) {
-	if (_.isUndefined(map)) {
-		// map = "sss.hh.mmm.l.H.M.L.eee"
-		// map = "ssss.hc.m.l.H.MC.L.e";
-		// map = "HHHHHHH.lllll..ll.LL.ll...llllllllllllllllllllllllllllllllllllllllllllllllll";
-		// map = "HHHHHHHHHHMMMMM";
-		// map = "lllllllcllllHHHHHHlllllllllllllllllllllllllllllllllllll";
-		map = "HHHHH..llllll.llllllclll...MMMMMMMcMMM...lllllcHHH..."
-	}
-
-	var mapNode = nodeManager.CreateModelNode();
-
-	if (!_.isUndefined(game)) {
-		game.storeMapInfo(map, unitSize, startPosX, startPosY)
-	}
-
-	for (var i = 0, mapLocation = 0; i < map.length; i++, mapLocation++) {
-		var currChar = map.charAt(i);
-		var lengthOfSection = 1;
-		var buildingStartIndex = mapLocation;
-
-		if (currChar == "c" || currChar == "C") {
-			mapLocation--;
-			var prevChar = (i == 0) ? map.charAt(0) : map.charAt(i-1);
-			var chainsaw = CreateChainsaw(currChar, prevChar, mapLocation, 2);
-			mapNode.addChild(chainsaw);
-			continue;
+			group.addChild(building2);
 		}
 
-		while (map.charAt(i+1) == currChar) {
-			i++;
-			lengthOfSection++;
-			mapLocation++;
+		group.translate(horizontalOffset * this.unitSize, verticalOffset, 0);
+		// group.translate(horizontalOffset*unitSize, 0, 0);
+
+		return group;
+	},
+
+	CreateChainsaw: function(type, prevType, horizontalOffset, scale) {
+		var verticalOffset = 0;
+		if (type == "C") {
+			verticalOffset += this.floorCeilingGap;
 		}
-		if (currChar != ".") {
-			var building = CreateBuilding(currChar, lengthOfSection, buildingStartIndex);
-			mapNode.addChild(building);
+
+		if (prevType == "h" || prevType == "H") {
+			verticalOffset += this.heightDiffH;
 		}
+		else if (prevType == "l" || prevType == "L") {
+			verticalOffset += this.heightDiffL;
+		}
+		
+		var diameter = this.unitSize * 0.9 * scale;
+		var chainsaw = this.nodeManager.CreateTextureNode(diameter, diameter, "images/saw.png", false, diameter, diameter, false);
+		chainsaw.translate(horizontalOffset * this.unitSize + (this.unitSize/2), verticalOffset, 0);
+		this.chainsaws.push(chainsaw);
+
+		// console.log("Creating bounding circle at offset " + horizontalOffset + ", x, y, d: " + chainsaw.translation.x + ", " + chainsaw.translation.y + ", " + diameter);
+		game.addBoundingCircle(horizontalOffset, chainsaw.translation.x, chainsaw.translation.y, diameter/2)
+
+		return chainsaw;
+	},
+
+	CreateLevel: function(map) {
+		if (_.isUndefined(map)) {
+			// map = "sss.hh.mmm.l.H.M.L.eee"
+			// map = "ssss.hc.m.l.H.MC.L.e";
+			// map = "HHHHHHH.lllll..ll.LL.ll...llllllllllllllllllllllllllllllllllllllllllllllllll";
+			// map = "HHHHHHHHHHMMMMM";
+			// map = "lllllllcllllHHHHHHlllllllllllllllllllllllllllllllllllll";
+			map = "HHHHH..llllll.llllllclll...MMMMMMMcMMM...lllllcHHH..."
+		}
+
+		var mapNode = this.nodeManager.CreateModelNode();
+
+		if (!_.isUndefined(game)) {
+			game.storeMapInfo(map, this.unitSize, this.startPosX, this.startPosY)
+		}
+
+		for (var i = 0, mapLocation = 0; i < map.length; i++, mapLocation++) {
+			var currChar = map.charAt(i);
+			var lengthOfSection = 1;
+			var buildingStartIndex = mapLocation;
+
+			if (currChar == "c" || currChar == "C") {
+				mapLocation--;
+				var prevChar = (i == 0) ? map.charAt(0) : map.charAt(i-1);
+				var chainsaw = this.CreateChainsaw(currChar, prevChar, mapLocation, 2);
+				mapNode.addChild(chainsaw);
+				continue;
+			}
+
+			while (map.charAt(i+1) == currChar) {
+				i++;
+				lengthOfSection++;
+				mapLocation++;
+			}
+			if (currChar != ".") {
+				var building = this.CreateBuilding(currChar, lengthOfSection, buildingStartIndex);
+				mapNode.addChild(building);
+			}
+		}
+
+		// Background 
+		var bg1 = this.nodeManager.CreateTextureNode(this.bgWidth, this.bgHeight, 'images/bg1.png', false, this.bgWidth, this.bgHeight, true);
+		mapNode.addChild(bg1);
+		bg1.translate(700,-150,-350);
+
+		var bg2 = this.nodeManager.CreateTextureNode(this.bgWidth*3, this.bgHeight, 'images/bg2.png', true, this.bgWidth, this.bgHeight, true);
+		mapNode.addChild(bg2);
+		bg2.translate(2000, -50, -800);
+
+		// mapNode.translate(-20,0,0);
+		return mapNode;
 	}
-
-	// Background 
-	var bgWidth = 2048;
-	var bgHeight = 512;
-
-	var bg1 = nodeManager.CreateTextureNode(bgWidth, bgHeight, 'images/bg1.png', false, bgWidth, bgHeight, true);
-	mapNode.addChild(bg1);
-	bg1.translate(700,-150,-350);
-
-	var bg2 = nodeManager.CreateTextureNode(bgWidth*3, bgHeight, 'images/bg2.png', true, bgWidth, bgHeight, true);
-	mapNode.addChild(bg2);
-	bg2.translate(2000, -50, -800);
-
-	// mapNode.translate(-20,0,0);
-	return mapNode;
-}
+});

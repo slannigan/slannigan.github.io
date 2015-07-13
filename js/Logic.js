@@ -133,7 +133,9 @@ _.extend(BoundingCircle.prototype, BoundingGeometry.prototype, {
 	}
 });
 
-var Logic = function(nodeManager) {
+var Logic = function(nodeManager, modelManager) {
+	this.modelManager = modelManager;
+
 	this.map = "";
 	this.unitSize = 1; // Default value
 
@@ -326,7 +328,7 @@ _.extend(Logic.prototype, {
 				this.audio.die();
 			}
 
-			if (this.died) KillCharacter();
+			if (this.died) this.modelManager.KillCharacter();
 
 			character.translate(deltaX, deltaY, 0);
 			this.characterSpeed = deltaX;

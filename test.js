@@ -6,7 +6,7 @@ var canvasContainer;
 var character = null;
 var level = null;
 var particles = null;
-var textureManager = null;
+// var textureManager = null;
 var nodeManager = null;
 
 var clock;
@@ -19,10 +19,11 @@ function init() {
     scene = new THREE.Scene();
     // scene.position.set(startX,0,0);
 
-    textureManager = new TextureManager();
+    var textureManager = new TextureManager();
     nodeManager = new NodeManager(textureManager);
+    var modelManager = new ModelManager(nodeManager);
     // nodeManager = new NodeManager();
-    game = new Logic(nodeManager);
+    game = new Logic(nodeManager, modelManager);
     // scene.add(this.particleManager.container.obj);
     scene.add(game.particleManager.container.obj);
  
@@ -60,10 +61,10 @@ function init() {
     // // textures.push(character)
     // scene.add(character);
 
-    character = CreateMeatBoy();
+    character = modelManager.CreateMeatBoy();
     scene.add(character.obj);
 
-    level = CreateLevel();
+    level = modelManager.CreateLevel();
     scene.add(level.obj);
 
     // particleManager = new ParticleManager();
@@ -95,7 +96,7 @@ function init() {
 
         // character.rotation.y = Math.sin(clock.getElapsedTime());
         // character.rotation.y = -0.5;
-        AnimateTest(time);
+        modelManager.AnimateTest(time);
 
         game.moveScene(scene, camera, light, time);
         game.animateCharacter(character, time);
