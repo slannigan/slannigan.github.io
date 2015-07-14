@@ -16,6 +16,11 @@ var Interface = function(canvasContainer, renderer, textureManager, modelManager
 
 	var self = this;
 
+	var restartFunction = function() {
+		self.RestartGame();
+	}
+	game.addRestartFunction(restartFunction);
+
 	document.addEventListener('keydown', function(e) {
 	    // http://www.javascriptkit.com/javatutors/javascriptkey2.shtml
 	    var unicode = e.keyCode? e.keyCode : e.charCode;
@@ -54,8 +59,6 @@ var Interface = function(canvasContainer, renderer, textureManager, modelManager
 	this.startMenu = document.getElementById("start-menu");
 	this.pauseMenu = document.getElementById("pause-menu");
 
-	// this.ShowStartMenu();
-	// this.startMenu.className = "";
 	this.ShowElement(this.startMenu);
 }
 
@@ -92,6 +95,7 @@ _.extend(Interface.prototype, {
 
 	RestartGame: function() {
 		console.log("Restart");
+		this.clock = new THREE.Clock();
 		this.game.restart();
 	}
 });

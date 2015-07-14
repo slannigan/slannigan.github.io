@@ -1,5 +1,6 @@
-var ModelManager = function(nodeManager) {
+var ModelManager = function(nodeManager, scene) {
 	this.nodeManager = nodeManager;
+	this.scene = scene;
 
 	// Character geometry
 	this.body;
@@ -10,7 +11,7 @@ var ModelManager = function(nodeManager) {
 	this.face;
 
 	// Character joints/nodes
-	this.characterNode;
+	this.characterNode = this.nodeManager.CreateModelNode();
 	this.shoulderR;
 	this.shoulderL;
 	this.hipR;
@@ -42,13 +43,13 @@ var ModelManager = function(nodeManager) {
 // Character related functions
 _.extend(ModelManager.prototype, {
 	KillCharacter: function() {
-		this.characterNode.obj.remove(this.body.obj);
+		// this.characterNode.obj.remove(this.body.obj);
+		console.log("Killing character");
+		this.scene.remove(this.characterNode.obj);
 		this.alive = false;
 	},
 
 	CreateMeatBoy: function() {
-		this.characterNode = this.nodeManager.CreateModelNode();
-
 		this.body = this.nodeManager.CreateBoxNode(this.meat, 1.5, 1, 0.75);
 		this.characterNode.addChild(this.body);
 
@@ -95,11 +96,23 @@ _.extend(ModelManager.prototype, {
 		this.body.resetRotationOrder('ZYX');
 		this.body.rotate(0, Math.PI/2, -0.25);
 
+		this.scene.add(this.characterNode.obj);
 		return this.characterNode;
 	},
 
 	ResetCharacter: function() {
 		// this.characterNode.applyTran
+		console.log("Resetting character");
+		if (this.alive = true) {
+			this.KillCharacter();
+		}
+		this.characterNode = this.nodeManager.CreateModelNode();
+		// this.CreateMeatBoy();
+		this.characterNode.addChild(this.body);
+		this.scene.add(this.characterNode.obj);
+		this.alive = true;
+
+		return this.characterNode;
 	},
 
 	AnimateTest: function(time) {

@@ -146,11 +146,13 @@ var Logic = function(nodeManager, modelManager, scene, camera, light, character)
 	this.startPosX = 26;
 	this.startPosY = 0;
 	this.cameraDistanceZ = 30;
+	this.lightPosition = new THREE.Vector3();
+	this.lightPosition.copy(this.light.position);
 
 	this.moveSceneStartTime = 1;
 	this.menuSpeed = 0.01;
 	this.speed = 0.2;
-	this.characterSpeed = 0.2;
+	this.characterSpeed = this.speed;
 	this.characterLocationIndex;
 
 	this.lastTimeOnGround = 0;
@@ -165,6 +167,8 @@ var Logic = function(nodeManager, modelManager, scene, camera, light, character)
 	this.characterHeight = 1.7;
 
 	this.characterBound;
+	this.characterStartPosX;
+	this.characterStartPosY;
 
 	this.died = false;
 	this.gameEnd = false;
@@ -175,26 +179,47 @@ var Logic = function(nodeManager, modelManager, scene, camera, light, character)
 	this.isFalling = false;
 
 	this.particleManager = new ParticleManager(nodeManager);
+
+	this.restartFunction;
 }
 // var output = 0;
 _.extend(Logic.prototype, {
+	addRestartFunction: function(restartFunction) {
+		this.restartFunction = restartFunction;
+	},
+
+	setCharacter: function() {
+		this.characterBound = {
+			minX: this.characterStartPosX - (this.characterWidth/2),
+			maxX: this.characterStartPosX + (this.characterWidth/2),
+			minY: this.characterStartPosY + 0.2,
+			maxY: this.characterStartPosY + 0.2 + this.characterHeight
+		}
+
+		this.characterLocationIndex = Math.floor(this.unitSize/this.characterStartPosX);
+
+		this.lastTimeOnGround = 0;
+		this.initialVelocity = 0;
+		this.died = false;
+		this.gameEnd = false;
+		this.isJumping = false;
+		this.isFalling = false;
+		this.characterSpeed = this.speed;
+	},
 	storeMapInfo: function(map, unitSize, startPosX, startPosY) {
 		this.map = map;
 		this.unitSize = unitSize;
-		this.characterBound = {
-			minX: startPosX - (this.characterWidth/2),
-			maxX: startPosX + (this.characterWidth/2),
-			minY: startPosY + 0.2,
-			maxY: startPosY + 0.2 + this.characterHeight
-		}
-
+		
 		for (var i = 0; i < map.length; i++) {
 			if (map.charAt(i) != "c" && map.charAt(i) != "C") {
 				this.boundingGeometries.push([])
 			}
 		}
 
-		this.characterLocationIndex = Math.floor(unitSize/startPosX);
+		this.characterStartPosX = startPosX;
+		this.characterStartPosY = startPosY;
+
+		this.setCharacter();
 	},
 	addBoundingBox: function(index, minX, minY, maxX, maxY) {
 		var box = new BoundingBox(minX, minY, maxX, maxY);
@@ -207,10 +232,11 @@ _.extend(Logic.prototype, {
 		this.boundingGeometries[index].push(circle);
 	},
 	setScene: function() {
+		console.log("Setting scene, firstCall: " + this.firstCall);
 		this.scene.position.set(this.startPosX, this.startPosY, 0);
 		this.camera.position.set(this.startPosX, this.startPosY, this.cameraDistanceZ);
 		this.camera.lookAt(this.scene.position);
-		// this.modelManager.resetCharacter();
+		this.light.position.copy(this.lightPosition);
 	},
 	moveScene: function(time) {
 		if (time > this.moveSceneStartTime && !this.died && !this.gameEnd) {
@@ -333,7 +359,12 @@ _.extend(Logic.prototype, {
 				this.audio.die();
 			}
 
-			if (this.died) this.modelManager.KillCharacter();
+			if (this.died) {
+				this.modelManager.KillCharacter();
+				if (!_.isUndefined(this.restartFunction)) {
+					setTimeout(this.restartFunction, 1000);
+				}
+			}
 
 			this.character.translate(deltaX, deltaY, 0);
 			this.characterSpeed = deltaX;
@@ -350,9 +381,10 @@ _.extend(Logic.prototype, {
 		this.audio.togglePaused(paused);
 	},
 	restart: function() {
-		this.firstCall = true;
 		this.died = false;
 		this.gameEnd = false;
 		this.setScene(this.scene, this.camera);
+		this.character = this.modelManager.ResetCharacter();
+		this.setCharacter();
 	}
 });

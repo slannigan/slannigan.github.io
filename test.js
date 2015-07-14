@@ -14,7 +14,7 @@ function init() {
 
     var textureManager = new TextureManager();
     var nodeManager = new NodeManager(textureManager);
-    var modelManager = new ModelManager(nodeManager);
+    var modelManager = new ModelManager(nodeManager, scene);
  
     // CAMERA
     var SCREEN_WIDTH = 850;
@@ -66,7 +66,8 @@ function init() {
 
 
     var character = modelManager.CreateMeatBoy();
-    scene.add(character.obj);
+    // scene.add(character.obj);
+    // modelManager.CreateMeatBoy();
 
     game = new Logic(nodeManager, modelManager, scene, camera, light, character);
     game.setScene();
