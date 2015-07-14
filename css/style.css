@@ -1,0 +1,22 @@
+.hidden {
+	display: none;
+}
+
+.canvasContainer {
+	border: 1px solid #000;
+}
+
+.canvasContainer,
+#start-menu,
+#pause-menu {
+	width: 850px;
+	height: 400px;
+}
+
+#start-menu,
+#pause-menu {
+	position: absolute;
+	background-color: rgba(0,0,0,0.3);
+	font-size: 30px;
+	color: #fff;
+}

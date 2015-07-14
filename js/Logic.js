@@ -133,8 +133,12 @@ _.extend(BoundingCircle.prototype, BoundingGeometry.prototype, {
 	}
 });
 
-var Logic = function(nodeManager, modelManager) {
+var Logic = function(nodeManager, modelManager, scene, camera, light, character) {
 	this.modelManager = modelManager;
+	this.scene = scene;
+	this.camera = camera;
+	this.light = light;
+	this.character = character;
 
 	this.map = "";
 	this.unitSize = 1; // Default value
@@ -155,7 +159,7 @@ var Logic = function(nodeManager, modelManager) {
 	this.jumpSpeedDeceleration = -this.jumpSpeed*4;
 	this.initialVelocity = 0;
 
-	this.boundingGeometries = []
+	this.boundingGeometries = [];
 
 	this.characterWidth = 0.75;
 	this.characterHeight = 1.7;
@@ -202,17 +206,18 @@ _.extend(Logic.prototype, {
 		var circle = new BoundingCircle(centreX, centreY, radius);
 		this.boundingGeometries[index].push(circle);
 	},
-	setScene: function(scene, camera) {
-		scene.position.set(this.startPosX, this.startPosY, 0);
-		camera.position.set(this.startPosX, this.startPosY, this.cameraDistanceZ);
-		camera.lookAt(scene.position);
+	setScene: function() {
+		this.scene.position.set(this.startPosX, this.startPosY, 0);
+		this.camera.position.set(this.startPosX, this.startPosY, this.cameraDistanceZ);
+		this.camera.lookAt(this.scene.position);
+		// this.modelManager.resetCharacter();
 	},
-	moveScene: function(scene, camera, light, time) {
+	moveScene: function(time) {
 		if (time > this.moveSceneStartTime && !this.died && !this.gameEnd) {
-			scene.position.x += this.characterSpeed;
-			camera.position.x += this.characterSpeed;
-			camera.lookAt(scene.position);
-			light.position.x += this.characterSpeed;
+			this.scene.position.x += this.characterSpeed;
+			this.camera.position.x += this.characterSpeed;
+			this.camera.lookAt(this.scene.position);
+			this.light.position.x += this.characterSpeed;
 		}
 	},
 	chainsawDeath: function(time, deltax, deltay, saw) {
@@ -228,7 +233,7 @@ _.extend(Logic.prototype, {
 	    var directionVector = new THREE.Vector3(speedX,speedY,0);
     	this.particleManager.createBloodSplatter(startPoint, directionVector, time);
 	},
-	animateCharacter: function(character, time) {
+	animateCharacter: function(time) {
 		if (this.firstCall) {
 			this.firstCall = false;
 			// console.log("Start running");
@@ -330,11 +335,24 @@ _.extend(Logic.prototype, {
 
 			if (this.died) this.modelManager.KillCharacter();
 
-			character.translate(deltaX, deltaY, 0);
+			this.character.translate(deltaX, deltaY, 0);
 			this.characterSpeed = deltaX;
 		}
 	},
 	renderParticles: function(time) {
 		this.particleManager.RenderParticles(time);
+	}
+});
+
+// Functions called by Interface
+_.extend(Logic.prototype, {
+	togglePaused: function(paused) {
+		this.audio.togglePaused(paused);
+	},
+	restart: function() {
+		this.firstCall = true;
+		this.died = false;
+		this.gameEnd = false;
+		this.setScene(this.scene, this.camera);
 	}
 });

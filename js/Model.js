@@ -31,6 +31,7 @@ var ModelManager = function(nodeManager) {
 	// Character characteristics
 	this.startPosX = 2;
 	this.startPosY = this.heightDiffH;
+	this.startPos = new THREE.Vector3(this.startPosX, this.startPosY + 0.75 + 0.2, 0);
 	this.meat = new THREE.MeshLambertMaterial({ color: 0xbf000b });
 	this.alive = true;
 
@@ -95,6 +96,10 @@ _.extend(ModelManager.prototype, {
 		this.body.rotate(0, Math.PI/2, -0.25);
 
 		return this.characterNode;
+	},
+
+	ResetCharacter: function() {
+		// this.characterNode.applyTran
 	},
 
 	AnimateTest: function(time) {

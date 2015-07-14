@@ -1,13 +1,6 @@
 // standard global variables
 var scene, camera, renderer, game;
 var canvasContainer;
- 
-// Character 3d object
-var character = null;
-var level = null;
-var particles = null;
-// var textureManager = null;
-var nodeManager = null;
 
 var clock;
  
@@ -20,12 +13,8 @@ function init() {
     // scene.position.set(startX,0,0);
 
     var textureManager = new TextureManager();
-    nodeManager = new NodeManager(textureManager);
+    var nodeManager = new NodeManager(textureManager);
     var modelManager = new ModelManager(nodeManager);
-    // nodeManager = new NodeManager();
-    game = new Logic(nodeManager, modelManager);
-    // scene.add(this.particleManager.container.obj);
-    scene.add(game.particleManager.container.obj);
  
     // CAMERA
     var SCREEN_WIDTH = 850;
@@ -39,7 +28,6 @@ function init() {
     // camera.position.set(startX,0,30);
     // camera.position.set(0,0,30);
     // camera.lookAt(scene.position);
-    game.setScene(scene, camera);
  
     // RENDERER
     renderer = new THREE.WebGLRenderer({
@@ -50,8 +38,7 @@ function init() {
     renderer.setClearColor(0xb5b2c5);
     canvasContainer.appendChild( renderer.domElement );
 
-    var container = document.body;
-    container.appendChild( renderer.domElement );
+    // canvasContainer.appendChild( renderer.domElement );
  
     // Main polygon
     // character = TextureMapper(2, 1, 'meatboy.png', true, 0.5, 0.5);
@@ -60,12 +47,6 @@ function init() {
     // }
     // // textures.push(character)
     // scene.add(character);
-
-    character = modelManager.CreateMeatBoy();
-    scene.add(character.obj);
-
-    level = modelManager.CreateLevel();
-    scene.add(level.obj);
 
     // particleManager = new ParticleManager();
     // scene.add(particleManager.container.obj);
@@ -82,28 +63,19 @@ function init() {
     scene.add(light);
     var ambience = new THREE.AmbientLight(0x999999);
     scene.add(ambience);
- 
-    // Start animation
-    clock = new THREE.Clock;
-    var time;
 
-    var render = function () {
-        requestAnimationFrame( render );
 
-        time = clock.getElapsedTime();
+    var character = modelManager.CreateMeatBoy();
+    scene.add(character.obj);
 
-        textureManager.VerifyTexturesOn();
+    game = new Logic(nodeManager, modelManager, scene, camera, light, character);
+    game.setScene();
+    // scene.add(this.particleManager.container.obj);
+    scene.add(game.particleManager.container.obj);
 
-        // character.rotation.y = Math.sin(clock.getElapsedTime());
-        // character.rotation.y = -0.5;
-        modelManager.AnimateTest(time);
+    var level = modelManager.CreateLevel();
+    scene.add(level.obj);
 
-        game.moveScene(scene, camera, light, time);
-        game.animateCharacter(character, time);
-        game.renderParticles(time);
 
-        renderer.render(scene, camera);
-    };
-
-    render();
+    var gameInterface = new Interface(canvasContainer, renderer, textureManager, modelManager, game, scene, camera, light, character);
 }

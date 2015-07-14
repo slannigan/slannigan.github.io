@@ -1,29 +1,29 @@
-var toggleParticles = false;
-
-document.addEventListener('keydown', function(e) {
-    // http://www.javascriptkit.com/javatutors/javascriptkey2.shtml
-    var unicode = e.keyCode? e.keyCode : e.charCode;
-
-    if (unicode == 80) {      // 'p' key
-        toggleParticles = true;
-    }
-});
-
 var ParticleManager = function(nodeManager) {
 	this.nodeManager = nodeManager;
 	this.container = this.nodeManager.CreateModelNode();
 	this.particleSystems = [];
 	this.particlesOn = true;
+	this.toggleParticles = false;
 
 	this.billboardManager = new BillboardManager(nodeManager);
+
+	var self = this;
+	document.addEventListener('keydown', function(e) {
+	    // http://www.javascriptkit.com/javatutors/javascriptkey2.shtml
+	    var unicode = e.keyCode? e.keyCode : e.charCode;
+
+	    if (unicode == 80) {      // 'p' key
+	        self.toggleParticles = true;
+	    }
+	});
 }
 
 _.extend(ParticleManager.prototype, {
 	RenderParticles: function(time) {
 		// console.log("Rendering particles");
-		if (toggleParticles) {
-			this.particlesOn = !particlesOn;
-			toggleParticles = false;
+		if (this.toggleParticles) {
+			this.particlesOn = !this.particlesOn;
+			this.toggleParticles = false;
 		}
 
 		if (this.particlesOn) {

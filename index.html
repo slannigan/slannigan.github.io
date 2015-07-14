@@ -1,5 +1,6 @@
 <html>
 <head>
+<link rel="stylesheet" href="css/style.css"/>
 <script src="ext/three.js"></script>
 <script src="ext/underscore.js"></script>
 <script src="js/TextureMapping.js"></script>
@@ -9,6 +10,7 @@
 <script src="js/Logic.js"></script>
 <script src="js/Billboards.js"></script>
 <script src="js/Particles.js"></script>
+<script src="js/Interface.js"></script>
 <script src="test.js"></script>
 <script id="vertShader" type="shader">
 varying vec2 vUv;
@@ -70,7 +72,7 @@ void main(void) {
 	    for (int l = 0; l < MAX_POINT_LIGHTS; l++) {
 	    	addedLights.rgb += ambientLightColor[l];
 	    }
-	    
+
 	    if (isBg == 1) {
 	    	gl_FragColor = texture2D(texture, vUv);
 	    }
@@ -82,8 +84,6 @@ void main(void) {
 </script>
 </head>
 <body style="margin: 0px;" onload="init()">
-	<div id="canvas-container"></div>
-
 	<!-- Game sounds -->
 	<div style="display: hidden;">
 		<audio id="runSound">
@@ -105,6 +105,19 @@ void main(void) {
 		<audio id="backgroundMusic">
 			<source type="audio/mpeg" src="sounds/Danny Baranowsky - Super Meat Boy! - Digital Special Edition Soundtrack - 04 Ballad of the Burning Squirrel (Ch 1 Dark World).mp3"></source>
 		</audio>
+	</div>
+
+	<div id="canvas-container" class="canvasContainer">
+		<div id="start-menu" class="hidden">
+			Press any key to start <br>
+			Space to jump <br>
+			"P" to pause <br>
+
+			<p>Other: "M" to mute music, "S" to mute sound effects, "T" to toggle textures</p>
+		</div>
+		<div id="pause-menu" class="hidden">
+			Paused
+		</div>
 	</div>
 </body>
 </html>

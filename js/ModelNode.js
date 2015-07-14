@@ -105,7 +105,7 @@ _.extend(ModelNode.prototype, {
 	},
 
 	applyTranslation: function(translation, updateGlobal) {
-		var t = new THREE.Vector3();
+		var t = new THREE.Vector3(0,0,0);
 		t.addVectors(translation, this.translation);
 
 		this.obj.position.copy(t);
@@ -113,6 +113,8 @@ _.extend(ModelNode.prototype, {
 		if (_.isUndefined(updateGlobal) || updateGlobal == true) {
 			this.obj.updateMatrixWorld(true);
 		}
+
+		// console.log("t: " + t.x + ", " + t.y + ", " + t.z);
 	},
 
 	applyRotation: function(rotation, updateGlobal) {

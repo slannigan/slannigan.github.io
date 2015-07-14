@@ -19,10 +19,11 @@ var Sounds = function() {
 
 	this.musicOn = true;
 	this.sfxOn = true;
+	this.paused = false;
 
 	this.music.loop = true;
 	this.music.play();
-	if (!this.musicOn) this.music.volume = 0;
+	if (!this.musicOn) this.muteMusic();
 
 	if (this.sfxOn) this.unmuteSFX();
 	else this.muteSFX();
@@ -46,6 +47,19 @@ var Sounds = function() {
 }
 
 _.extend(Sounds.prototype, {
+	muteMusic: function() {
+		this.music.volume = 0;
+	},
+
+	lowerMusic: function() {
+		this.music.volume = 0.5;
+	},
+
+	unmuteMusic: function() {
+		if (this.paused) this.lowerMusic();
+		else this.music.volume = 1;
+	},
+
 	muteSFX: function() {
 		this.run.volume = 0;
 		this.jump.volume = 0;
@@ -60,6 +74,19 @@ _.extend(Sounds.prototype, {
 		this.land.volume = 1;
 		this.death.volume = 1;
 		this.saw.volume = 1;
+	},
+
+	togglePaused: function(paused) {
+		// console.log("Toggling audio paused: " + paused);
+		this.paused = paused;
+		if (paused) {
+			if (this.musicOn) this.lowerMusic();
+			if (this.sfxOn) this.muteSFX();
+		}
+		else {
+			if (this.musicOn) this.unmuteMusic();
+			if (this.sfxOn) this.unmuteSFX();
+		}
 	},
 
 	startRunning: function() {
