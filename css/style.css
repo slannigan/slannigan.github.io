@@ -28,6 +28,12 @@
 	color: #fff;
 }
 
+#pause-menu {
+	background-image: url("../images/paused-orbitron.png");
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
 @keyframes fade-out-in-out {
 	from {
 		opacity: 0;
