@@ -360,10 +360,10 @@ _.extend(Logic.prototype, {
 			this.characterBound.minY += deltaY;
 			this.characterBound.maxY += deltaY;
 
-			if (!this.isFalling && !this.isJumping) {
+			if (deltaY == 0 && !this.isFalling && !this.isJumping) {
 				this.bloodTrailTime = (this.bloodTrailTime + 1) % this.bloodTrailInterval;
 				if (this.bloodTrailTime == 0) {
-					var bloodTrail = this.nodeManager.CreateAnimatedTextureNode(1.5, 1.5, 'test', false);
+					var bloodTrail = this.nodeManager.CreateAnimatedTextureNode(2.5, 2.5, 'tail', false);
 					bloodTrail.translate(((this.characterBound.minX + this.characterBound.maxX)/2) - this.characterWidth,
 										 (this.characterBound.minY + this.characterBound.maxY)/2, 0);
 					this.scene.add(bloodTrail.obj);

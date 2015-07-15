@@ -23,22 +23,41 @@ var TextureManager = function() {
         brick: THREE.ImageUtils.loadTexture('images/brick.png'),
         saw: THREE.ImageUtils.loadTexture('images/saw.png'),
         bg1: THREE.ImageUtils.loadTexture('images/bg1.png'),
-        bg2: THREE.ImageUtils.loadTexture('images/bg2.png')
+        bg2: THREE.ImageUtils.loadTexture('images/bg2.png'),
+
+        tail1: THREE.ImageUtils.loadTexture('images/bloodtail1.png'),
+        tail2: THREE.ImageUtils.loadTexture('images/bloodtail2.png'),
+        tail3: THREE.ImageUtils.loadTexture('images/bloodtail3.png'),
+        tail4: THREE.ImageUtils.loadTexture('images/bloodtail4.png'),
+        tail5: THREE.ImageUtils.loadTexture('images/bloodtail5.png'),
+        tail6: THREE.ImageUtils.loadTexture('images/bloodtail6.png')
     }
 
     this.AnimationLibrary = {
-        test: [ 
+        tail: [ 
                 { 
-                    texture: 'blood', 
-                    duration: 100 
+                    texture: 'tail1', 
+                    duration: 75 
                 }, 
                 { 
-                    texture: 'brick', 
-                    duration: 100 
+                    texture: 'tail2', 
+                    duration: 75 
                 },
                 {
-                    texture: 'saw',
-                    duration: 100
+                    texture: 'tail3',
+                    duration: 75
+                },
+                {
+                    texture: 'tail4',
+                    duration: 75
+                },
+                {
+                    texture: 'tail5',
+                    duration: 75
+                },
+                {
+                    texture: 'tail6',
+                    duration: 75
                 }
             ]
     }
