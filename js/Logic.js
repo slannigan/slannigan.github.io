@@ -52,7 +52,7 @@ _.extend(BoundingBox.prototype, BoundingGeometry.prototype, {
 	intersectsY: function(minX, maxX, minY, maxY) {
 		// if (((minX >= this.minX && minX <= this.maxX) || (maxX >= this.minX && maxX <= this.maxX)) &&
 			// ((minY >= this.minY && minY <= this.maxY) || (maxY >= this.minY && maxY <= this.maxY))) {
-		if ((minX <= this.maxX && maxX >= this.minX) && (minY <= this.maxY && maxY >= this.minY)) {
+		if ((minX < this.maxX && maxX > this.minX) && (minY <= this.maxY && maxY >= this.minY)) {
 
 			return true;
 		}
@@ -62,7 +62,7 @@ _.extend(BoundingBox.prototype, BoundingGeometry.prototype, {
 
 	intersectsX: function(minX, maxX, minY, maxY) {
 		if (maxX >= this.minX && minX <= this.minX && 
-			((minY >= this.minY && minY <= this.maxY) || (maxY >= this.minY && maxY <= this.maxY))) {
+			((minY > this.minY && minY < this.maxY) || (maxY > this.minY && maxY < this.maxY))) {
 			return true;
 		}
 		return false;
@@ -296,20 +296,7 @@ _.extend(Logic.prototype, {
 
 				for (var i = 0; i < this.boundingGeometries[j+index].length; i++) {
 					var geometry = this.boundingGeometries[j+index][i];
-					if (!intersectsX && !this.died) {
-						if (geometry.intersectsX(this.characterBound.minX + deltaX,
-												this.characterBound.maxX + deltaX,
-												this.characterBound.minY,
-												this.characterBound.maxY)) {
 
-							if (geometry.isChainsaw()) {
-								this.chainsawDeath(time, deltaX, deltaY, geometry);
-							}
-
-							intersectsX = true;
-							deltaX = 0;
-						}
-					}
 					if (!intersectsY && !this.died) {
 						if (geometry.intersectsY(this.characterBound.minX,
 												this.characterBound.maxX,
@@ -334,6 +321,21 @@ _.extend(Logic.prototype, {
 							if (geometry.isChainsaw()) {
 								this.chainsawDeath(time);
 							}
+						}
+					}
+
+					if (!intersectsX && !this.died) {
+						if (geometry.intersectsX(this.characterBound.minX + deltaX,
+												this.characterBound.maxX + deltaX,
+												this.characterBound.minY,
+												this.characterBound.maxY)) {
+
+							if (geometry.isChainsaw()) {
+								this.chainsawDeath(time, deltaX, deltaY, geometry);
+							}
+
+							intersectsX = true;
+							deltaX = 0;
 						}
 					}
 				}

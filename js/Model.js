@@ -264,6 +264,7 @@ _.extend(ModelManager.prototype, {
 			// map = "HHHHHHHHHHMMMMM";
 			// map = "lllllllcllllHHHHHHlllllllllllllllllllllllllllllllllllll";
 			map = "HHHHH..llllll.llllllclll...MMMMMMMcMMM...lllllcHHH..."
+			// map = "HHHHHHHHHHHHCHHHHHHLLL"
 		}
 
 		var mapNode = this.nodeManager.CreateModelNode();

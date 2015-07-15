@@ -60,13 +60,10 @@ _.extend(NodeManager.prototype, {
     	});
 
 		for (var i = 0; i < anim.length; i++) {
-			// textures.push(anim[i].texture);
-			console.log("texture: " + anim[i].texture);
 			var texture = this.CreateTextureNode(planeSizeX, planeSizeY, anim[i].texture, false, planeSizeX, planeSizeY, false);
 			textures.push(texture);
 
 			if (i == 0) {
-				console.log("Set to 0");
 				container.addChild(textures[0]);
 			}
 			else {
