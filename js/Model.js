@@ -21,7 +21,7 @@ var ModelManager = function(nodeManager, scene) {
 	this.chainsaws = [];
 
 	// Map characteristics
-	this.floorCeilingGap = 5;
+	this.floorCeilingGap = 6;
 	this.heightDiffH = 6;
 	this.heightDiffL = -6;
 	this.unitSize = 3;
@@ -233,9 +233,9 @@ _.extend(ModelManager.prototype, {
 	},
 
 	CreateChainsaw: function(type, prevType, horizontalOffset, scale) {
-		var verticalOffset = 0;
+		var verticalOffset = -0.5;
 		if (type == "C") {
-			verticalOffset += this.floorCeilingGap;
+			verticalOffset += this.floorCeilingGap + 1;
 		}
 
 		if (prevType == "h" || prevType == "H") {
@@ -263,7 +263,7 @@ _.extend(ModelManager.prototype, {
 			// map = "HHHHHHH.lllll..ll.LL.ll...llllllllllllllllllllllllllllllllllllllllllllllllll";
 			// map = "HHHHHHHHHHMMMMM";
 			// map = "lllllllcllllHHHHHHlllllllllllllllllllllllllllllllllllll";
-			map = "HHHHH..llllll.llllllclll...MMMMMMMcMMM...lllllcHHH..."
+			map = "HHHHHHH..lllllllll..llllllcllllll...MMMMMMMcMMMCMMMcMMMMMMMM...lllllcHHH..."
 			// map = "HHHHHHHHHHHHCHHHHHHLLL"
 		}
 

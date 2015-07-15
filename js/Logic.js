@@ -150,9 +150,9 @@ var Logic = function(nodeManager, modelManager, scene, camera, light, character)
 	this.lightPosition = new THREE.Vector3();
 	this.lightPosition.copy(this.light.position);
 
-	this.moveSceneStartTime = 1;
+	this.moveSceneStartTime = 0.7;
 	this.menuSpeed = 0.01;
-	this.speed = 0.2;
+	this.speed = 0.4;
 	this.characterSpeed = this.speed;
 	this.characterLocationIndex;
 
@@ -179,7 +179,7 @@ var Logic = function(nodeManager, modelManager, scene, camera, light, character)
 	this.isJumping = false;
 	this.isFalling = false;
 
-	this.bloodTrailInterval = 20;
+	this.bloodTrailInterval = 10;
 	this.bloodTrailTime = this.bloodTrailInterval;
 
 	this.particleManager = new ParticleManager(nodeManager, camera);
@@ -276,7 +276,7 @@ _.extend(Logic.prototype, {
 			// if (spacePressed && time - spacePressedTime < this.maxJumpReachedAtTime) {
 				// this.initialVelocity += this.jumpSpeed;
 			// }
-			if (spacePressed && upSpeed > 0) {
+			if (spacePressed && upSpeed > 0 && !this.isFalling) {
 				this.initialVelocity += upSpeed;
 			}
 			
@@ -345,7 +345,7 @@ _.extend(Logic.prototype, {
 				this.isJumping = true;
 				this.audio.startJump();
 			}
-			else if (!this.isFalling && deltaY < 0) {
+			else if (!this.isFalling && deltaY <= 0) {
 				this.isJumping = false;
 				this.isFalling = true;
 				this.audio.startFall();
