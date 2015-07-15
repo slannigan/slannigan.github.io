@@ -16,6 +16,36 @@ var TextureManager = function() {
             self.toggleTextures = true;
         }
     });
+
+    this.ImageLibrary = {
+        face: THREE.ImageUtils.loadTexture('images/meatboy-face.png'),
+        blood: THREE.ImageUtils.loadTexture('images/blood.png'),
+        brick: THREE.ImageUtils.loadTexture('images/brick.png'),
+        saw: THREE.ImageUtils.loadTexture('images/saw.png'),
+        bg1: THREE.ImageUtils.loadTexture('images/bg1.png'),
+        bg2: THREE.ImageUtils.loadTexture('images/bg2.png')
+    }
+
+    this.AnimationLibrary = {
+        test: [ 
+                // { 
+                //     texture: 'blood', 
+                //     duration: 100 
+                // }, 
+                { 
+                    texture: 'brick', 
+                    duration: 100 
+                },
+                {
+                    texture: 'saw',
+                    duration: 100
+                }
+            ]
+    }
+
+    _.each(this.ImageLibrary, function(texture) {
+        texture.magFilter = THREE.NearestFilter;
+    });
 }
 
 _.extend(TextureManager.prototype, {
@@ -43,10 +73,15 @@ _.extend(TextureManager.prototype, {
 
         var g = new THREE.PlaneBufferGeometry(planeSizeX, planeSizeY);
 
-        var texture = THREE.ImageUtils.loadTexture(textureImage);
-        texture.magFilter = THREE.NearestFilter;
+        var texture;
+        if (!_.isUndefined(this.ImageLibrary[textureImage])) {
+            texture = this.ImageLibrary[textureImage];
+        }
+        else {
+            texture = THREE.ImageUtils.loadTexture(textureImage);
+            texture.magFilter = THREE.NearestFilter;
+        }
 
-        // var repeat = THREE.Vector2(1,1);
         var repeatX = 1, repeatY = 1;
 
         if (tile) {

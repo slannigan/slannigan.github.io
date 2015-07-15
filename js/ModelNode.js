@@ -4,6 +4,7 @@
 var NodeManager = function(textureManager) {
 	this.textureManager = textureManager;
 	this.materialForNoTextures = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
+	this.bgMaterialForNoTextures = new THREE.MeshLambertMaterial({ color: 0x0000ff });
 }
 
 _.extend(NodeManager.prototype, {
@@ -30,7 +31,7 @@ _.extend(NodeManager.prototype, {
 				return this.CreateBoxNode(this.materialForNoTextures, planeSizeX, planeSizeY, 0.01);
 			}
 			else {
-				return this.CreateJointNode();
+				return this.CreateBoxNode(this.bgMaterialForNoTextures, planeSizeX, planeSizeY, 0.01);
 			}
 		}
 		// If TextureManager exists, create texture
@@ -39,7 +40,101 @@ _.extend(NodeManager.prototype, {
 			texture.obj = this.textureManager.CreateTexture(planeSizeX, planeSizeY, textureImage, tile, textureSizeX, textureSizeY, isBg);
 			return texture;
 		}
-	}
+	},
+
+	CreateAnimatedTextureNode: function(planeSizeX, planeSizeY, textureAnimation, loops) {
+        var container = this.CreateModelNode();
+        var anim = this.textureManager.AnimationLibrary[textureAnimation];
+
+        if (_.isUndefined(anim)) {
+        	console.log("Animation undefined");
+        	return container;
+        }
+        
+        var textures = [];
+        var timeSoFar = 0;
+        var totalTime = 0;
+
+    	_.each(anim, function(frame) {
+    		totalTime += frame.duration;
+    	});
+
+		for (var i = 0; i < anim.length; i++) {
+			// textures.push(anim[i].texture);
+			console.log("texture: " + anim[i].texture);
+			var texture = this.CreateTextureNode(planeSizeX, planeSizeY, anim[i].texture, false, planeSizeX, planeSizeY, false);
+			textures.push(texture);
+
+			if (i == 0) {
+				console.log("Set to 0");
+				container.addChild(textures[0]);
+			}
+			else {
+				var nextTexture = function() {
+					// console.log("INDEX (" + i + "): Switching from " + (i-1) + " to " + i);
+					container.removeChild(textures[i-2]);
+					container.addChild(textures[i-1]);
+				}
+
+				setTimeout(nextTexture, timeSoFar);
+
+				if (loops) {
+					setTimeout(function() {
+						setInterval(nextTexture, totalTime);
+					}, timeSoFar);
+				}
+
+				if (i == anim.length - 1) {
+					if (loops) {
+						var restartAnimation = function() {
+							// console.log("Switching from " + i + " to 0");
+							container.removeChild(textures[i-1]);
+							container.addChild(textures[0]);
+						}
+						setInterval(restartAnimation, totalTime);
+					}
+					else {
+						var clearAnimation = function() {
+							container.removeChild(textures[i-1]);
+						}
+						setTimeout(clearAnimation, totalTime);
+					}
+				}
+			}
+
+			timeSoFar += anim[i].duration;
+		}
+
+        /*if (!_.isUndefined(this.ImageLibrary[textureImage])) {
+            texture = this.ImageLibrary[textureImage];
+        }
+        else {
+            texture = THREE.ImageUtils.loadTexture(textureImage);
+            texture.magFilter = THREE.NearestFilter;
+        }*/
+
+        // var texture1 = this.CreateTextureNode(planeSizeX, planeSizeY, textureImage1, false, planeSizeX, planeSizeY, false);
+        // var texture2 = this.CreateTextureNode(planeSizeX, planeSizeY, textureImage2, false, planeSizeX, planeSizeY, false);
+
+        // container.addChild(texture1);
+
+        // var addTexture2 = function() {
+        // 	container.removeChild(texture1);
+        // 	container.addChild(texture2);
+        // }
+        // var addTexture1 = function() {
+        // 	container.removeChild(texture2);
+        // 	container.addChild(texture1);
+        // }
+
+        // setTimeout(function() {
+        // 	setInterval(addTexture2, 1000);
+        // }, 500);
+
+        // setInterval(addTexture1, 1000);
+
+        return container;
+    }
 });
 
 var ModelNode = function() {

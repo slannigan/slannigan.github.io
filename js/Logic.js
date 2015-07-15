@@ -134,6 +134,7 @@ _.extend(BoundingCircle.prototype, BoundingGeometry.prototype, {
 });
 
 var Logic = function(nodeManager, modelManager, scene, camera, light, character) {
+	this.nodeManager = nodeManager;
 	this.modelManager = modelManager;
 	this.scene = scene;
 	this.camera = camera;
@@ -177,6 +178,9 @@ var Logic = function(nodeManager, modelManager, scene, camera, light, character)
 	this.firstCall = true;
 	this.isJumping = false;
 	this.isFalling = false;
+
+	this.bloodTrailInterval = 20;
+	this.bloodTrailTime = this.bloodTrailInterval;
 
 	this.particleManager = new ParticleManager(nodeManager);
 
@@ -353,6 +357,16 @@ _.extend(Logic.prototype, {
 			this.characterBound.maxX += deltaX;
 			this.characterBound.minY += deltaY;
 			this.characterBound.maxY += deltaY;
+
+			if (!this.isFalling && !this.isJumping) {
+				this.bloodTrailTime = (this.bloodTrailTime + 1) % this.bloodTrailInterval;
+				if (this.bloodTrailTime == 0) {
+					var bloodTrail = this.nodeManager.CreateAnimatedTextureNode(1.5, 1.5, 'test', false);
+					bloodTrail.translate(((this.characterBound.minX + this.characterBound.maxX)/2) - this.characterWidth,
+										 (this.characterBound.minY + this.characterBound.maxY)/2, 0);
+					this.scene.add(bloodTrail.obj);
+				}
+			}
 
 			if (this.characterBound.minY < -20) {
 				this.died = true;

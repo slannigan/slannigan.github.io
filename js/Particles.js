@@ -57,7 +57,7 @@ _.extend(ParticleManager.prototype, {
 		var ttlVar = 0.15;
 		var hasGravity = true;
 		var creationRate = 50;
-		var image = "images/blood.png";
+		var image = "blood";
 		var alwaysOn = false;
 		
 		var particleSystem = new ParticleSystem(this.nodeManager, this.billboardManager, startPoint, startPointDistribution, directionVector, sizeAvg, sizeVar, ttlAvg, ttlVar, hasGravity, creationRate, image, alwaysOn, time);

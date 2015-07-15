@@ -53,7 +53,7 @@ _.extend(ModelManager.prototype, {
 		this.body = this.nodeManager.CreateBoxNode(this.meat, 1.5, 1, 0.75);
 		this.characterNode.addChild(this.body);
 
-		this.face = this.nodeManager.CreateTextureNode(1, 1, 'images/meatboy.png', true, 1, 1, false);
+		this.face = this.nodeManager.CreateTextureNode(1.5, 1.5, 'face', true, 1.5, 1.5, false);
 		this.body.addChild(this.face);
 		this.face.translate(0, 0, 0.377);
 
@@ -161,16 +161,16 @@ _.extend(ModelManager.prototype, {
 		var building = this.nodeManager.CreateBoxNode(this.buildingMat, boxLength, boxHeight, boxDepth);
 
 		// Textures
-		var front = this.nodeManager.CreateTextureNode(boxLength, boxHeight, "images/brick.png", true, this.unitSize, this.unitSize, false);
+		var front = this.nodeManager.CreateTextureNode(boxLength, boxHeight, "brick", true, this.unitSize, this.unitSize, false);
 		front.translate(0,0,(boxDepth/2) + 0.001)
 		building.addChild(front);
 
-		var right = this.nodeManager.CreateTextureNode(boxDepth, boxHeight, "images/brick.png", true, this.unitSize, this.unitSize, false);
+		var right = this.nodeManager.CreateTextureNode(boxDepth, boxHeight, "brick", true, this.unitSize, this.unitSize, false);
 		right.rotate(0, Math.PI/2, 0);
 		right.translate((boxLength/2) + 0.001, 0, 0);
 		building.addChild(right);
 
-		var left = this.nodeManager.CreateTextureNode(boxDepth, boxHeight, "images/brick.png", true, this.unitSize, this.unitSize, false);
+		var left = this.nodeManager.CreateTextureNode(boxDepth, boxHeight, "brick", true, this.unitSize, this.unitSize, false);
 		left.rotate(0, -Math.PI/2, 0);
 		left.translate(-((boxLength/2) + 0.001), 0, 0);
 		building.addChild(left);
@@ -246,7 +246,7 @@ _.extend(ModelManager.prototype, {
 		}
 		
 		var diameter = this.unitSize * 0.9 * scale;
-		var chainsaw = this.nodeManager.CreateTextureNode(diameter, diameter, "images/saw.png", false, diameter, diameter, false);
+		var chainsaw = this.nodeManager.CreateTextureNode(diameter, diameter, "saw", false, diameter, diameter, false);
 		chainsaw.translate(horizontalOffset * this.unitSize + (this.unitSize/2), verticalOffset, 0);
 		this.chainsaws.push(chainsaw);
 
@@ -297,11 +297,11 @@ _.extend(ModelManager.prototype, {
 		}
 
 		// Background 
-		var bg1 = this.nodeManager.CreateTextureNode(this.bgWidth, this.bgHeight, 'images/bg1.png', false, this.bgWidth, this.bgHeight, true);
+		var bg1 = this.nodeManager.CreateTextureNode(this.bgWidth, this.bgHeight, 'bg1', false, this.bgWidth, this.bgHeight, true);
 		mapNode.addChild(bg1);
 		bg1.translate(700,-150,-350);
 
-		var bg2 = this.nodeManager.CreateTextureNode(this.bgWidth*3, this.bgHeight, 'images/bg2.png', true, this.bgWidth, this.bgHeight, true);
+		var bg2 = this.nodeManager.CreateTextureNode(this.bgWidth*3, this.bgHeight, 'bg2', true, this.bgWidth, this.bgHeight, true);
 		mapNode.addChild(bg2);
 		bg2.translate(2000, -50, -800);
 
