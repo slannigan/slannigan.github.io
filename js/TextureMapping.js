@@ -28,10 +28,10 @@ var TextureManager = function() {
 
     this.AnimationLibrary = {
         test: [ 
-                // { 
-                //     texture: 'blood', 
-                //     duration: 100 
-                // }, 
+                { 
+                    texture: 'blood', 
+                    duration: 100 
+                }, 
                 { 
                     texture: 'brick', 
                     duration: 100 

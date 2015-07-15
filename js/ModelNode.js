@@ -70,13 +70,13 @@ _.extend(NodeManager.prototype, {
 				container.addChild(textures[0]);
 			}
 			else {
-				var nextTexture = function() {
+				var nextTexture = function(x) {
 					// console.log("INDEX (" + i + "): Switching from " + (i-1) + " to " + i);
-					container.removeChild(textures[i-2]);
-					container.addChild(textures[i-1]);
+					container.removeChild(textures[x-1]);
+					container.addChild(textures[x]);
 				}
 
-				setTimeout(nextTexture, timeSoFar);
+				setTimeout(nextTexture, timeSoFar, i);
 
 				if (loops) {
 					setTimeout(function() {
@@ -94,10 +94,10 @@ _.extend(NodeManager.prototype, {
 						setInterval(restartAnimation, totalTime);
 					}
 					else {
-						var clearAnimation = function() {
-							container.removeChild(textures[i-1]);
+						var clearAnimation = function(x) {
+							container.removeChild(textures[x]);
 						}
-						setTimeout(clearAnimation, totalTime);
+						setTimeout(clearAnimation, totalTime, i);
 					}
 				}
 			}
