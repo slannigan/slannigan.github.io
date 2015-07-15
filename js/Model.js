@@ -1,6 +1,7 @@
 var ModelManager = function(nodeManager, scene) {
 	this.nodeManager = nodeManager;
 	this.scene = scene;
+	this.game;
 
 	// Character geometry
 	this.body;
@@ -154,6 +155,10 @@ _.extend(ModelManager.prototype, {
 
 // Level/map related functions
 _.extend(ModelManager.prototype, {
+	SetGame: function(game) {
+		this.game = game;
+	},
+
 	CreateBuildingBlock: function(length, isFlipped) {
 		var boxLength = length * this.unitSize;
 		var boxHeight = 30;
@@ -214,9 +219,9 @@ _.extend(ModelManager.prototype, {
 		var maxX = (horizontalOffset + length) * this.unitSize;
 
 		for (var i = horizontalOffset; i < horizontalOffset + length; i ++) {
-			game.addBoundingBox(i, minX, maxX, -this.inf, verticalOffset);
+			this.game.addBoundingBox(i, minX, maxX, -this.inf, verticalOffset);
 			if (!_.isNull(building2)) {
-				game.addBoundingBox(i, minX, maxX, verticalOffset + this.floorCeilingGap, this.inf);
+				this.game.addBoundingBox(i, minX, maxX, verticalOffset + this.floorCeilingGap, this.inf);
 			}
 		}
 
@@ -251,7 +256,7 @@ _.extend(ModelManager.prototype, {
 		this.chainsaws.push(chainsaw);
 
 		// console.log("Creating bounding circle at offset " + horizontalOffset + ", x, y, d: " + chainsaw.translation.x + ", " + chainsaw.translation.y + ", " + diameter);
-		game.addBoundingCircle(horizontalOffset, chainsaw.translation.x, chainsaw.translation.y, diameter/2)
+		this.game.addBoundingCircle(horizontalOffset, chainsaw.translation.x, chainsaw.translation.y, diameter/2)
 
 		return chainsaw;
 	},
@@ -269,8 +274,8 @@ _.extend(ModelManager.prototype, {
 
 		var mapNode = this.nodeManager.CreateModelNode();
 
-		if (!_.isUndefined(game)) {
-			game.storeMapInfo(map, this.unitSize, this.startPosX, this.startPosY)
+		if (!_.isUndefined(this.game)) {
+			this.game.storeMapInfo(map, this.unitSize, this.startPosX, this.startPosY)
 		}
 
 		for (var i = 0, mapLocation = 0; i < map.length; i++, mapLocation++) {
@@ -307,6 +312,7 @@ _.extend(ModelManager.prototype, {
 		bg2.translate(2000, -50, -800);
 
 		// mapNode.translate(-20,0,0);
+		this.scene.add(mapNode.obj);
 		return mapNode;
 	}
 });

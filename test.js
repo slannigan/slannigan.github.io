@@ -14,7 +14,6 @@ function init() {
 
     var textureManager = new TextureManager();
     var nodeManager = new NodeManager(textureManager);
-    var modelManager = new ModelManager(nodeManager, scene);
  
     // CAMERA
     var SCREEN_WIDTH = 850;
@@ -64,19 +63,5 @@ function init() {
     var ambience = new THREE.AmbientLight(0x999999);
     scene.add(ambience);
 
-
-    var character = modelManager.CreateMeatBoy();
-    // scene.add(character.obj);
-    // modelManager.CreateMeatBoy();
-
-    game = new Logic(nodeManager, modelManager, scene, camera, light, character);
-    game.setScene();
-    // scene.add(this.particleManager.container.obj);
-    scene.add(game.particleManager.container.obj);
-
-    var level = modelManager.CreateLevel();
-    scene.add(level.obj);
-
-
-    var gameInterface = new Interface(canvasContainer, renderer, textureManager, modelManager, game, scene, camera, light, character);
+    var gameInterface = new Interface(canvasContainer, renderer, textureManager, nodeManager, scene, camera, light);
 }

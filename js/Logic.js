@@ -211,6 +211,7 @@ _.extend(Logic.prototype, {
 		this.characterSpeed = this.speed;
 	},
 	storeMapInfo: function(map, unitSize, startPosX, startPosY) {
+		console.log("Storing map info");
 		this.map = map;
 		this.unitSize = unitSize;
 		

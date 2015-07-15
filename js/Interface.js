@@ -1,13 +1,17 @@
-var Interface = function(canvasContainer, renderer, textureManager, modelManager, game, scene, camera, light, character) {
+var Interface = function(canvasContainer, renderer, textureManager, nodeManager, scene, camera, light) {
 	this.canvasContainer = canvasContainer;
 	this.renderer = renderer;
 	this.textureManager = textureManager;
-	this.modelManager = modelManager;
-	this.game = game;
+	this.nodeManager = nodeManager;
 	this.scene = scene;
 	this.camera = camera;
 	this.light = light;
-	this.character = character;
+
+	// var modelManager = new ModelManager(nodeManager, scene);
+	this.character;
+	this.game;
+	this.level;
+	this.modelManager;
 
 	this.clock;
 
@@ -16,11 +20,6 @@ var Interface = function(canvasContainer, renderer, textureManager, modelManager
 	this.restartTime = 500;
 
 	var self = this;
-
-	var restartFunction = function() {
-		self.RestartGame();
-	}
-	game.addRestartFunction(restartFunction);
 
 	document.addEventListener('keydown', function(e) {
 	    // http://www.javascriptkit.com/javatutors/javascriptkey2.shtml
@@ -92,6 +91,23 @@ _.extend(Interface.prototype, {
 	StartPlay: function() {
 		this.clock = new THREE.Clock();
 		this.HideElement(this.startMenu);
+
+		this.modelManager = new ModelManager(this.nodeManager, this.scene);
+		this.character = this.modelManager.CreateMeatBoy();
+		this.game = new Logic(this.nodeManager, this.modelManager, this.scene, this.camera, this.light, this.character);
+		this.modelManager.SetGame(this.game);
+
+	    this.game.setScene();
+	    this.scene.add(this.game.particleManager.container.obj);
+
+	    this.level = this.modelManager.CreateLevel();
+
+	    var self = this;
+	    var restartFunction = function() {
+			self.RestartGame();
+		}
+		this.game.addRestartFunction(restartFunction);
+
 		this.render();
 	},
 
