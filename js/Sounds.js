@@ -36,7 +36,9 @@ var Sounds = function() {
 
 	    if (unicode == 77) { 	  // 'm' key
 	    	self.musicOn = !self.musicOn;
-	    	self.music.volume = (self.musicOn) ? 1 : 0;
+	    	// self.music.volume = (self.musicOn) ? 1 : 0;
+	    	if (self.musicOn) self.unmuteMusic();
+	    	else self.muteMusic();
 	    }
 	    else if (unicode == 83) { // 's' key
 	        self.sfxOn = !self.sfxOn;

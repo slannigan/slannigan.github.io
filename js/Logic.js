@@ -145,7 +145,7 @@ var Logic = function(nodeManager, modelManager, scene, camera, light, character)
 	this.unitSize = 1; // Default value
 
 	this.startPosX = 26;
-	this.startPosY = 0;
+	this.startPosY = 2;
 	this.cameraDistanceZ = 30;
 	this.lightPosition = new THREE.Vector3();
 	this.lightPosition.copy(this.light.position);
@@ -345,12 +345,12 @@ _.extend(Logic.prototype, {
 				this.isJumping = true;
 				this.audio.startJump();
 			}
-			else if (!this.isFalling && deltaY <= 0) {
+			else if (!this.isFalling && this.isJumping && deltaY <= 0) {
 				this.isJumping = false;
 				this.isFalling = true;
 				this.audio.startFall();
 			}
-			else if (this.isFalling && deltaY == 0) {
+			else if (this.isFalling && !this.isJumping && deltaY == 0) {
 				this.isFalling = false;
 				this.audio.startLand();
 			}
