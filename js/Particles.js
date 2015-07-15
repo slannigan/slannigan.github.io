@@ -1,11 +1,11 @@
-var ParticleManager = function(nodeManager) {
+var ParticleManager = function(nodeManager, camera) {
 	this.nodeManager = nodeManager;
 	this.container = this.nodeManager.CreateModelNode();
 	this.particleSystems = [];
 	this.particlesOn = true;
 	this.toggleParticles = false;
 
-	this.billboardManager = new BillboardManager(nodeManager);
+	this.billboardManager = new BillboardManager(nodeManager, camera);
 
 	var self = this;
 	document.addEventListener('keydown', function(e) {
@@ -50,7 +50,7 @@ _.extend(ParticleManager.prototype, {
 	},
 
 	createBloodSplatter: function(startPoint, directionVector, time) {
-		var startPointDistribution = new THREE.Vector3(0.1, 0.1, 0.1);
+		var startPointDistribution = new THREE.Vector3(0.1, 0.1, 0);
 		var sizeAvg = 0.3;
 		var sizeVar = 0.2;
 		var ttlAvg = 0.45;

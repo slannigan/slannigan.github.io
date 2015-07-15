@@ -105,34 +105,6 @@ _.extend(NodeManager.prototype, {
 			timeSoFar += anim[i].duration;
 		}
 
-        /*if (!_.isUndefined(this.ImageLibrary[textureImage])) {
-            texture = this.ImageLibrary[textureImage];
-        }
-        else {
-            texture = THREE.ImageUtils.loadTexture(textureImage);
-            texture.magFilter = THREE.NearestFilter;
-        }*/
-
-        // var texture1 = this.CreateTextureNode(planeSizeX, planeSizeY, textureImage1, false, planeSizeX, planeSizeY, false);
-        // var texture2 = this.CreateTextureNode(planeSizeX, planeSizeY, textureImage2, false, planeSizeX, planeSizeY, false);
-
-        // container.addChild(texture1);
-
-        // var addTexture2 = function() {
-        // 	container.removeChild(texture1);
-        // 	container.addChild(texture2);
-        // }
-        // var addTexture1 = function() {
-        // 	container.removeChild(texture2);
-        // 	container.addChild(texture1);
-        // }
-
-        // setTimeout(function() {
-        // 	setInterval(addTexture2, 1000);
-        // }, 500);
-
-        // setInterval(addTexture1, 1000);
-
         return container;
     }
 });

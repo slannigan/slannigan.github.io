@@ -182,7 +182,7 @@ var Logic = function(nodeManager, modelManager, scene, camera, light, character)
 	this.bloodTrailInterval = 20;
 	this.bloodTrailTime = this.bloodTrailInterval;
 
-	this.particleManager = new ParticleManager(nodeManager);
+	this.particleManager = new ParticleManager(nodeManager, camera);
 
 	this.restartFunction;
 }
