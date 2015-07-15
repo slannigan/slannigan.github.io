@@ -13,6 +13,7 @@ var Interface = function(canvasContainer, renderer, textureManager, modelManager
 
 	this.paused = false;
 	this.started = false;
+	this.restartTime = 500;
 
 	var self = this;
 
@@ -58,6 +59,7 @@ var Interface = function(canvasContainer, renderer, textureManager, modelManager
 
 	this.startMenu = document.getElementById("start-menu");
 	this.pauseMenu = document.getElementById("pause-menu");
+	this.blackScreen = document.getElementById("black");
 
 	this.ShowElement(this.startMenu);
 }
@@ -95,7 +97,16 @@ _.extend(Interface.prototype, {
 
 	RestartGame: function() {
 		console.log("Restart");
-		this.clock = new THREE.Clock();
-		this.game.restart();
+		var self = this;
+
+		this.blackScreen.className = "fadeOutInOut";
+		setTimeout(function() {
+			self.blackScreen.className = "";
+		}, this.restartTime);
+
+		setTimeout(function() {
+			self.clock = new THREE.Clock();
+			self.game.restart();
+		}, this.restartTime/2);
 	}
 });

@@ -378,7 +378,7 @@ _.extend(Logic.prototype, {
 			if (this.died) {
 				this.modelManager.KillCharacter();
 				if (!_.isUndefined(this.restartFunction)) {
-					setTimeout(this.restartFunction, 1000);
+					setTimeout(this.restartFunction, 750);
 				}
 			}
 

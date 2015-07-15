@@ -8,16 +8,46 @@
 
 .canvasContainer,
 #start-menu,
-#pause-menu {
+#pause-menu,
+#black {
 	width: 850px;
 	height: 400px;
 	text-align: center;
 }
 
 #start-menu,
-#pause-menu {
+#pause-menu,
+#black {
 	position: absolute;
+}
+
+#start-menu,
+#pause-menu {
 	background-color: rgba(0,0,0,0.3);
 	font-size: 30px;
 	color: #fff;
+}
+
+@keyframes fade-out-in-out {
+	from {
+		opacity: 0;
+	}
+
+	50% {
+		opacity: 100;
+	}
+
+	to {
+		opacity: 0;
+	}
+}
+
+#black {
+	background-color: #000;
+	opacity: 0;
+}
+
+.fadeOutInOut {
+	animation-duration: 0.5s;
+	animation-name: fade-out-in-out;
 }
