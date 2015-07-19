@@ -46,8 +46,6 @@ var Interface = function(canvasContainer, renderer, textureManager, nodeManager,
 
         self.textureManager.VerifyTexturesOn();
 
-        // character.rotation.y = Math.sin(clock.getElapsedTime());
-        // character.rotation.y = -0.5;
         self.modelManager.AnimateChainsaws(time);
         self.animationManager.Animate(time);
 
@@ -61,6 +59,7 @@ var Interface = function(canvasContainer, renderer, textureManager, nodeManager,
 	this.startMenu = document.getElementById("start-menu");
 	this.pauseMenu = document.getElementById("pause-menu");
 	this.blackScreen = document.getElementById("black");
+	this.winScreen = document.getElementById("win");
 
 	this.ShowElement(this.startMenu);
 }
@@ -109,6 +108,10 @@ _.extend(Interface.prototype, {
 			self.RestartGame();
 		}
 		this.game.addRestartFunction(restartFunction);
+		var endGameFunction = function() {
+			self.EndGame();
+		}
+		this.game.addEndGameFunction(endGameFunction);
 
 		this.animationManager.Run(0);
 	    this.animationManager.Animate(0);
@@ -131,5 +134,33 @@ _.extend(Interface.prototype, {
 		    self.animationManager.Animate(0);
 			self.game.restart();
 		}, this.restartTime/2);
+	},
+
+	EndGame: function() {
+		this.winScreen.className = "";
+
+		var self = this;
+		var showScreen = function() {
+			self.winScreen.className = "";
+		}
+		var hideScreen = function() {
+			self.winScreen.className = "hidden";
+		}
+
+		var blinkTime = 300;
+
+		var showScreenTimer;
+		var hideScreenTimer = setInterval(function() {
+			hideScreen();
+		}, blinkTime)
+		setTimeout(function() {
+			showScreenTimer = setInterval(function() {
+				showScreen();
+			}, blinkTime);
+		}, blinkTime)
+		setTimeout(function() {
+			clearInterval(showScreenTimer);
+			clearInterval(hideScreenTimer);
+		}, blinkTime*6.5);
 	}
 });

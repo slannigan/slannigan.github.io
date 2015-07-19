@@ -243,7 +243,7 @@ _.extend(ModelManager.prototype, {
 			// map = "HHHHHHH.lllll..ll.LL.ll...llllllllllllllllllllllllllllllllllllllllllllllllll";
 			// map = "HHHHHHHHHHMMMMM";
 			// map = "lllllllcllllHHHHHHlllllllllllllllllllllllllllllllllllll";
-			map = "HHHHHHH..lllllllll..llllllcllllll...MMMMMMMcMMMCMMMcMMMMMMMM...lllllcHHH..."
+			map = "HHHHHHH..lllllllll..llllllcllllll...MMMMMMMcMMMCMMMcMMMMMMMM...eeeeeeeeeeeeeeeeeH"
 			// map = "HHHHHHHHHHHHCHHHHHHLLL"
 		}
 

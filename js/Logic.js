@@ -180,6 +180,10 @@ var Logic = function(nodeManager, modelManager, scene, camera, light, character,
 	this.isJumping = false;
 	this.isFalling = false;
 
+	this.endIndex;
+	this.stopCamIndex;
+	this.stopMovingCameraIndexGap = 5;
+
 	this.bloodTrailInterval = 10;
 	this.bloodTrailTime = this.bloodTrailInterval;
 
@@ -191,6 +195,10 @@ var Logic = function(nodeManager, modelManager, scene, camera, light, character,
 _.extend(Logic.prototype, {
 	addRestartFunction: function(restartFunction) {
 		this.restartFunction = restartFunction;
+	},
+
+	addEndGameFunction: function(endGameFunction) {
+		this.endGameFunction = endGameFunction;
 	},
 
 	setCharacter: function() {
@@ -217,8 +225,14 @@ _.extend(Logic.prototype, {
 		this.unitSize = unitSize;
 		
 		for (var i = 0; i < map.length; i++) {
-			if (map.charAt(i) != "c" && map.charAt(i) != "C") {
+			var c = map.charAt(i);
+			if (c != "c" && c != "C") {
 				this.boundingGeometries.push([])
+			}
+			if (c == "e" && _.isUndefined(this.endIndex)) {
+				this.endIndex = i+1;
+				this.stopCamIndex = this.endIndex - this.stopMovingCameraIndexGap;
+				// break;
 			}
 		}
 
@@ -245,7 +259,7 @@ _.extend(Logic.prototype, {
 		this.light.position.copy(this.lightPosition);
 	},
 	moveScene: function(time) {
-		if (time > this.moveSceneStartTime && !this.died && !this.gameEnd) {
+		if (time > this.moveSceneStartTime && !this.died && this.characterLocationIndex < this.stopCamIndex) {
 			this.scene.position.x += this.characterSpeed;
 			this.camera.position.x += this.characterSpeed;
 			this.camera.lookAt(this.scene.position);
@@ -271,7 +285,7 @@ _.extend(Logic.prototype, {
 			// console.log("Start running");
 			// this.audio.startRunning();
 		}
-		if (!this.died && !this.gameEnd) {
+		if (!this.died) {
 			var deltaTime = time - this.lastTimeOnGround;
 			var gravitySpeed = this.gravity * deltaTime;
 			var upSpeed = this.jumpSpeed + (this.jumpSpeedDeceleration * deltaTime);
@@ -391,6 +405,12 @@ _.extend(Logic.prototype, {
 				this.animationManager.Reset(time);
 				if (!_.isUndefined(this.restartFunction)) {
 					setTimeout(this.restartFunction, 750);
+				}
+			}
+			else if (this.characterLocationIndex == this.endIndex && !this.gameEnd) {
+				this.gameEnd = true;
+				if (!_.isUndefined(this.endGameFunction)) {
+					this.endGameFunction();
 				}
 			}
 
