@@ -40,7 +40,7 @@ var AnimationManager = function() {
 		// { x: 0, y: 0, z: 0 },
 		{ x: 0, y: 0, z: -0.25}
 	];
-	this.runningBodyRotationSpeed = 4;
+	this.runningBodyRotationSpeed = 12;
 
 
 	// --------- LEG ANIMATIONS ------------- //
@@ -77,7 +77,7 @@ var AnimationManager = function() {
 		{ x: 0, y: 0, z: 0 }, // Will be reset to be previous arm translation position
 		{ x: 0, y: 0.25, z: 0 }
 	];
-	this.jumpingArmRotationSpeed = 4;
+	this.jumpingArmRotationSpeed = 8;
 
 	this.fallingArmRRotation = [
 		{ x: 0, y: 0, z: -1 }, // Will be reset to be previous arm rotation position
@@ -105,7 +105,7 @@ var AnimationManager = function() {
 	];
 	this.runningArmTranslation0 = { x: 0, y: 0, z: 0 }
 	this.runningArmRotation0 = { x: 0, y: 0, z: 0 }
-	this.runningArmSpeed = 1;
+	this.runningArmSpeed = 3;
 }
 
 _.extend(AnimationManager.prototype, {
@@ -141,6 +141,23 @@ _.extend(AnimationManager.prototype, {
 		this.state = this.falling;
 		this.stateStart = time;
 		this.changeState = true;
+	},
+
+	Reset: function(time) {
+		var e = new THREE.Euler(0,0,0);
+		var v = new THREE.Vector3(0,0,0);
+
+		this.shoulderR.applyRotation(e);
+		this.shoulderR.applyTranslation(v);
+		this.shoulderL.applyRotation(e);
+		this.shoulderL.applyTranslation(v);
+
+		this.hipR.applyRotation(e);
+		this.hipR.applyTranslation(v);
+		this.hipL.applyRotation(e);
+		this.hipL.applyTranslation(v);
+
+		this.state = null;
 	},
 
 	Factorial: function(n) {

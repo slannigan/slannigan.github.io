@@ -50,7 +50,7 @@ _.extend(ModelManager.prototype, {
 		this.alive = false;
 	},
 
-	CreateMeatBoy: function() {
+	CreateMeatBoy: function(animationManager) {
 		this.body = this.nodeManager.CreateBoxNode(this.meat, 1.5, 1, 0.75);
 		this.characterNode.addChild(this.body);
 
@@ -95,7 +95,11 @@ _.extend(ModelManager.prototype, {
 		// Transform to starting position
 		this.body.translate(this.startPosX, this.startPosY + 0.75 + 0.2, 0);
 		this.body.resetRotationOrder('ZYX');
-		this.body.rotate(0, Math.PI/2, -0.25);
+		this.body.rotate(0, Math.PI/2, 0);
+
+		if (!_.isUndefined(animationManager)) {
+			animationManager.SetBody(this.body, this.armR, this.armL, this.legR, this.legL, this.shoulderR, this.shoulderL, this.hipR, this.hipL)
+		}
 
 		this.scene.add(this.characterNode.obj);
 		return this.characterNode;
@@ -116,36 +120,7 @@ _.extend(ModelManager.prototype, {
 		return this.characterNode;
 	},
 
-	AnimateTest: function(time) {
-		var factor = time*24;
-
-		if (this.alive) {
-			// Meat Boy
-			var armLRotation = new THREE.Euler();
-			armLRotation.x = 0.5*Math.sin(factor);
-			armLRotation.y = 0.5*Math.sin(factor);
-
-			this.shoulderL.applyRotation(armLRotation);
-
-			var legLRotation = new THREE.Euler();
-			legLRotation.x = -0.5*Math.sin(factor);
-			this.hipL.applyRotation(legLRotation);
-			var legLTranslation = new THREE.Vector3(0, 0.05*Math.cos(factor) + 0.1, 0);
-			this.hipL.applyTranslation(legLTranslation);
-
-			var armRRotation = new THREE.Euler();
-			armRRotation.x = -0.5*Math.sin(factor);
-			armRRotation.y = -0.5*Math.sin(factor);
-
-			this.shoulderR.applyRotation(armRRotation);
-
-			var legRRotation = new THREE.Euler();
-			legRRotation.x = 0.5*Math.sin(factor);
-			this.hipR.applyRotation(legRRotation);
-			var legRTranslation = new THREE.Vector3(0, 0.05*Math.cos(factor) + 0.1, 0);
-			this.hipR.applyTranslation(legLTranslation);
-		}
-
+	AnimateChainsaws: function(time) {
 		// Chainsaws
 		_.each(this.chainsaws, function(chainsaw) {
 			chainsaw.rotate(0,0,-0.1);

@@ -3,6 +3,7 @@ var Interface = function(canvasContainer, renderer, textureManager, nodeManager,
 	this.renderer = renderer;
 	this.textureManager = textureManager;
 	this.nodeManager = nodeManager;
+	this.animationManager = new AnimationManager();
 	this.scene = scene;
 	this.camera = camera;
 	this.light = light;
@@ -47,7 +48,8 @@ var Interface = function(canvasContainer, renderer, textureManager, nodeManager,
 
         // character.rotation.y = Math.sin(clock.getElapsedTime());
         // character.rotation.y = -0.5;
-        self.modelManager.AnimateTest(time);
+        self.modelManager.AnimateChainsaws(time);
+        self.animationManager.Animate(time);
 
         self.game.moveScene(time);
         self.game.animateCharacter(time);
@@ -93,8 +95,8 @@ _.extend(Interface.prototype, {
 		this.HideElement(this.startMenu);
 
 		this.modelManager = new ModelManager(this.nodeManager, this.scene);
-		this.character = this.modelManager.CreateMeatBoy();
-		this.game = new Logic(this.nodeManager, this.modelManager, this.scene, this.camera, this.light, this.character);
+		this.character = this.modelManager.CreateMeatBoy(this.animationManager);
+		this.game = new Logic(this.nodeManager, this.modelManager, this.scene, this.camera, this.light, this.character, this.animationManager);
 		this.modelManager.SetGame(this.game);
 
 	    this.game.setScene();
@@ -107,6 +109,9 @@ _.extend(Interface.prototype, {
 			self.RestartGame();
 		}
 		this.game.addRestartFunction(restartFunction);
+
+		this.animationManager.Run(0);
+	    this.animationManager.Animate(0);
 
 		this.render();
 	},
@@ -122,6 +127,8 @@ _.extend(Interface.prototype, {
 
 		setTimeout(function() {
 			self.clock = new THREE.Clock();
+			self.animationManager.Run(0);
+		    self.animationManager.Animate(0);
 			self.game.restart();
 		}, this.restartTime/2);
 	}

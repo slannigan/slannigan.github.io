@@ -133,13 +133,14 @@ _.extend(BoundingCircle.prototype, BoundingGeometry.prototype, {
 	}
 });
 
-var Logic = function(nodeManager, modelManager, scene, camera, light, character) {
+var Logic = function(nodeManager, modelManager, scene, camera, light, character, animationManager) {
 	this.nodeManager = nodeManager;
 	this.modelManager = modelManager;
 	this.scene = scene;
 	this.camera = camera;
 	this.light = light;
 	this.character = character;
+	this.animationManager = animationManager;
 
 	this.map = "";
 	this.unitSize = 1; // Default value
@@ -345,15 +346,24 @@ _.extend(Logic.prototype, {
 			if (!this.isJumping && deltaY > 0) {
 				this.isJumping = true;
 				this.audio.startJump();
+				if (!_.isUndefined(this.animationManager)) {
+					this.animationManager.Jump(time);
+				}
 			}
 			else if (!this.isFalling && this.isJumping && deltaY <= 0) {
 				this.isJumping = false;
 				this.isFalling = true;
 				this.audio.startFall();
+				if (!_.isUndefined(this.animationManager)) {
+					this.animationManager.Fall(time);
+				}
 			}
 			else if (this.isFalling && !this.isJumping && deltaY == 0) {
 				this.isFalling = false;
 				this.audio.startLand();
+				if (!_.isUndefined(this.animationManager)) {
+					this.animationManager.Run(time);
+				}
 			}
 
 			this.characterBound.minX += deltaX;
@@ -378,6 +388,7 @@ _.extend(Logic.prototype, {
 
 			if (this.died) {
 				this.modelManager.KillCharacter();
+				this.animationManager.Reset(time);
 				if (!_.isUndefined(this.restartFunction)) {
 					setTimeout(this.restartFunction, 750);
 				}
