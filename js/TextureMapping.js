@@ -3,8 +3,74 @@ var TextureManager = function() {
     this.texturesOn = true;
     this.toggleTextures = false;
 
-    this.vShader = document.getElementById('vertShader').text;
-    this.fShader = document.getElementById('fragShader').text;
+    this.vShader = "//VERTEX SHADER\n" +
+        "varying vec2 vUv;\n" +
+        "varying vec3 vecPos;\n" +
+        "varying vec3 vecNormal;\n" +
+
+        "uniform float textRepeatX;\n" +
+        "uniform float textRepeatY;\n" +
+        "uniform int textureOn;\n" +
+
+        // https://csantosbh.wordpress.com/2014/01/09/custom-shaders-with-three-js-uniforms-textures-and-lighting/
+        "void main() {\n" +
+            "if (textureOn == 1) {\n" +
+                "vUv = uv * vec2(textRepeatX, textRepeatY);\n" +
+                // Since the light is on world coordinates,
+                // I'll need the vertex position in world coords too
+                // (or I could transform the light position to view
+                // coordinates, but that would be more expensive)
+                "vecPos = (modelMatrix * vec4(position, 1.0 )).xyz;\n" +
+                // That's NOT exacly how you should transform your
+                // normals but this will work fine, since my model
+                // matrix is pretty basic
+                "vecNormal = (modelMatrix * vec4(normal, 0.0)).xyz;\n" +
+                "gl_Position = projectionMatrix *\n" +
+                              "modelViewMatrix * vec4(position, 1.0 );\n" +
+            "}\n" +
+        "}\n";
+
+    this.fShader = "//FRAGMENT SHADER\n" +
+        "precision highp float;\n" +
+         
+        "varying vec2 vUv;\n" +
+        "varying vec3 vecPos;\n" +
+        "varying vec3 vecNormal;\n" +
+         
+        "uniform float color;\n" +
+        "uniform sampler2D texture;\n" +
+        "uniform int textureOn;\n" +
+        "uniform int isBg;\n" +
+         
+        // https://github.com/mrdoob/three.js/blob/master/src/renderers/shaders/UniformsLib.js
+        "uniform vec3 ambientLightColor[MAX_POINT_LIGHTS];\n" +
+        "uniform vec3 pointLightColor[MAX_POINT_LIGHTS];\n" +
+        "uniform vec3 pointLightPosition[MAX_POINT_LIGHTS];\n" +
+        "uniform float pointLightDistance[MAX_POINT_LIGHTS];\n" +
+         
+        "void main(void) {\n" +
+            // Pretty basic lambertian lighting...
+            "if (textureOn == 1) {\n" +
+                "vec4 addedLights = vec4(0.0,0.0,0.0, 1.0);\n" +
+                "for(int l = 0; l < MAX_POINT_LIGHTS; l++) {\n" +
+                    "vec3 lightDirection = normalize(vecPos\n" +
+                                          "-pointLightPosition[l]);\n" +
+                    "addedLights.rgb += clamp(dot(-lightDirection,\n" +
+                                             "vecNormal), 0.0, 1.0)\n" +
+                                       "* pointLightColor[l];\n" +
+                "}\n" +
+                "for (int l = 0; l < MAX_POINT_LIGHTS; l++) {\n" +
+                    "addedLights.rgb += ambientLightColor[l];\n" +
+                "}\n" +
+
+                "if (isBg == 1) {\n" +
+                    "gl_FragColor = texture2D(texture, vUv);\n" +
+                "}\n" +
+                "else {\n" +
+                    "gl_FragColor = texture2D(texture, vUv) * addedLights;\n" +
+                "}\n" +
+            "}\n" +
+        "}\n";
 
     var self = this;
 
