@@ -21,8 +21,10 @@ var Sounds = function() {
 	this.sfxOn = true;
 	this.paused = false;
 
-	this.music.loop = true;
-	this.music.play();
+	if (!_.isNull(this.music)) {
+		this.music.loop = true;
+		this.music.play();
+	}
 	if (!this.musicOn) this.muteMusic();
 
 	if (this.sfxOn) this.unmuteSFX();
@@ -36,7 +38,6 @@ var Sounds = function() {
 
 	    if (unicode == 77) { 	  // 'm' key
 	    	self.musicOn = !self.musicOn;
-	    	// self.music.volume = (self.musicOn) ? 1 : 0;
 	    	if (self.musicOn) self.unmuteMusic();
 	    	else self.muteMusic();
 	    }
@@ -50,16 +51,24 @@ var Sounds = function() {
 
 _.extend(Sounds.prototype, {
 	muteMusic: function() {
-		this.music.volume = 0;
+		if (!_.isNull(this.music)) {
+			this.music.volume = 0;
+		}
 	},
 
 	lowerMusic: function() {
-		this.music.volume = 0.5;
+		if (!_.isNull(this.music)) {
+			this.music.volume = 0.5;
+		}
 	},
 
 	unmuteMusic: function() {
 		if (this.paused) this.lowerMusic();
-		else this.music.volume = 1;
+		else {
+			if (!_.isNull(this.music)) {
+				this.music.volume = 1;
+			}
+		}
 	},
 
 	muteSFX: function() {

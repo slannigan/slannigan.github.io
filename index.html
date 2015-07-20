@@ -16,7 +16,7 @@
 </head>
 <body style="margin: 0px;" onload="init()">
 	<!-- Game sounds -->
-	<div style="display: hidden;">
+	<div class="hidden">
 		<audio id="runSound">
 			<source type="audio/wav" src="sounds/Meat_feet_fast1.wav"></source>
 		</audio>
@@ -38,21 +38,103 @@
 		</audio>
 	</div>
 
-	<div id="canvas-container" class="canvasContainer">
-		<div id="start-menu" class="hidden">
-			Press any key to start <br>
-			Space to jump <br>
-			"P" to pause <br>
-			"R" to restart <br>
+	<div id="topbar">
+		<div class="content-container">
+			Jump to objective:
+			<a href="obj01.html">1</a>
+			<a href="obj02.html">2</a>
+			<a href="obj03.html">3</a>
+			<a href="obj04.html">4</a>
+			<a href="obj05.html">5</a>
+			<a href="obj06.html">6</a>
+			<a href="obj07.html">7</a>
+			<a href="obj08.html">8</a>
+			<a href="obj09.html">9</a>
+			<a href="obj10.html">10</a>
+		</div>
+	</div>
 
-			<p>Other: "M" to mute music, "S" to mute sound effects, "T" to toggle textures</p>
+	<div class="content-container">
+		<h1>CS 488: Final Project</h1>
+		<p>This game was created using WebGL and THREE.js, an API for WebGL.</p>
+		<div id="canvas-container" class="canvasContainer">
+			<div id="start-menu" class="hidden">
+				Press any key to start <br>
+				Space to jump <br>
+				"P" to pause <br>
+				"R" to restart <br>
+
+				<p>Other: "M" to mute music, "S" to mute sound effects, "T" to toggle textures</p>
+			</div>
+			<div id="pause-menu" class="hidden">
+			</div>
+			<div id="win" class="hidden">
+				YOU WIN!!!
+			</div>
+			<div id="black">
+			</div>
 		</div>
-		<div id="pause-menu" class="hidden">
+		
+		<div class="tile">
+			<h2><a href="obj01.html">Objective 1: Modelling the Scene and Character ></a></h2>
+			<p>The level is mapped based off of a string which defines the locations of buildings,
+				spaces, and chainsaws. The character, Meat Boy, is a simple character made up of five
+				boxes - a body, two arms, and two legs. </p>
+			<img src="">
 		</div>
-		<div id="win" class="hidden">
-			YOU WIN!!!
+		<div class="tile">
+			<h2><a href="obj02.html">Objective 2: Animating the Character using Splines ></a></h2>
+			<p>Meat Boy is animated using Bezier splines. Animations were created for
+				running, jumping, and falling.</p>
+			<img src="">
 		</div>
-		<div id="black">
+		<div class="tile">
+			<h2><a href="obj03.html">Objective 3: Sound Effects ></a></h2>
+			<p>Sound effects are applied for running, jumping, landing, and dying. 
+				These sound effects are from Super Meat Boy. They were created by 
+				<a href="http://www.jordanfehr.com/">Jordan Fehr.</a></p>
+			<img src="">
+		</div>
+		<div class="tile">
+			<h2><a href="obj04.html">Objective 4: Static Collision Detection ></a></h2>
+			<p>Collision detection is used to determine when Meat Boy has collided with a building
+				or a chainsaw. Meat Boy and each building have a bounding box, and each chainsaw
+				has a bounding sphere. Since the game is a side-scroller, only collisions in the 
+				X and Y axes are checked. If Meat Boy is attempting to move in an axis, and a collision is detected in that axis, the movement is cancelled. </p>
+			<img src="">
+		</div>
+		<div class="tile">
+			<h2><a href="obj05.html">Objective 5: Gravity ></a></h2>
+			<p>A constant gravitational force is applied to Meat Boy. It increases his downward velocity
+				the longer he's been airborne.</p>
+			<img src="">
+		</div>
+		<div class="tile">
+			<h2><a href="obj06.html">Objective 6: Texture Mapping ></a></h2>
+			<p>Textures are applied to buildings, the level background, chainsaws, and Meat Boy's face.
+				The texture mapper loads images. New objects ask the texture mapper for a specific image.</p>
+			<img src="">
+		</div>
+		<div class="tile">
+			<h2><a href="obj07.html">Objective 7: Particle System ></a></h2>
+			<p>The particle system is used to show blood splatters when Meat Boy collides with a chainsaw.</p>
+			<img src="">
+		</div>
+		<div class="tile">
+			<h2><a href="obj08.html">Objective 8: Billboards ></a></h2>
+			<p>Billboards are camera facing sprites. The in-game particle system uses billboards to
+				display the particles.</p>
+			<img src="">
+		</div>
+		<div class="tile">
+			<h2><a href="obj09.html">Objective 9: Animating Textures ></a></h2>
+			<p>Animated textures show a collection of images in a sequence.</p>
+			<img src="">
+		</div>
+		<div class="tile">
+			<h2><a href="obj10.html">Objective 10: User Interface ></a></h2>
+			<p></p>
+			<img src="">
 		</div>
 	</div>
 </body>

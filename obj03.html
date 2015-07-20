@@ -1,0 +1,59 @@
+<html>
+<head>
+<link rel="stylesheet" href="css/style.css"/>
+<script src="ext/three.js"></script>
+<script src="ext/underscore.js"></script>
+<script src="js/ModelNode.js"></script>
+<script src="js/Model.js"></script>
+<script src="js/SplineAnimation.js"></script>
+<script src="js/Sounds.js"></script>
+<script src="js/obj03.js"></script>
+</head>
+<body style="margin: 0px;" onload="init()">
+	<!-- Game sounds -->
+	<div class="hidden">
+		<audio id="runSound">
+			<source type="audio/wav" src="sounds/Meat_feet_fast1.wav"></source>
+		</audio>
+		<audio id="jumpSound">
+			<source type="audio/wav" src="sounds/Meat_jumps0.wav"></source>
+		</audio>
+		<audio id="landSound">
+			<source type="audio/wav" src="sounds/Meat_Landing0.wav"></source>
+		</audio>
+		<audio id="deathSound">
+			<source type="audio/wav" src="sounds/meat_death1.wav"></source>
+		</audio>
+		<audio id="sawSound">
+			<source type="audio/wav" src="sounds/SawDeath0.wav"></source>
+		</audio>
+	</div>
+
+	<div id="topbar">
+		<div class="content-container">
+			<a href="index.html" id="go-to-main">Go to main</a>
+			Jump to objective:
+			<a href="obj01.html">1</a>
+			<a href="obj02.html">2</a>
+			<a href="obj03.html" class="selected">3</a>
+			<a href="obj04.html">4</a>
+			<a href="obj05.html">5</a>
+			<a href="obj06.html">6</a>
+			<a href="obj07.html">7</a>
+			<a href="obj08.html">8</a>
+			<a href="obj09.html">9</a>
+			<a href="obj10.html">10</a>
+		</div>
+	</div>
+	<div class="content-container">
+		<h1>Objective 3: Sound Effects</h1>
+		<p><b>Instructions: "S" to toggle sound effects. SPACE to jump. Hold to jump higher.</b></p>
+		<p>Sound effects are applied for running, jumping, landing, and dying. 
+			These sound effects are from Super Meat Boy. They were created by 
+			<a href="http://www.jordanfehr.com/">Jordan Fehr.</a></p>
+		<p>The code for sound effects can be found in Sounds.js.</p>
+		<div id="canvas-container" class="canvasContainer">
+		</div>
+	</div>
+</body>
+</html>
