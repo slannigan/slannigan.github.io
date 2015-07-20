@@ -71,6 +71,7 @@ h2 {
 
 .canvasContainer {
 	border: 1px solid #000;
+	margin-bottom: 40px;
 }
 
 .canvasContainer,

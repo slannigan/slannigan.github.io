@@ -194,9 +194,13 @@ _.extend(ModelManager.prototype, {
 		var maxX = (horizontalOffset + length) * this.unitSize;
 
 		for (var i = horizontalOffset; i < horizontalOffset + length; i ++) {
-			this.game.addBoundingBox(i, minX, maxX, -this.inf, verticalOffset);
+			if (!_.isUndefined(this.game)) {
+				this.game.addBoundingBox(i, minX, maxX, -this.inf, verticalOffset);
+			}
 			if (!_.isNull(building2)) {
-				this.game.addBoundingBox(i, minX, maxX, verticalOffset + this.floorCeilingGap, this.inf);
+				if (!_.isUndefined(this.game)) {
+					this.game.addBoundingBox(i, minX, maxX, verticalOffset + this.floorCeilingGap, this.inf);
+				}
 			}
 		}
 
@@ -231,7 +235,9 @@ _.extend(ModelManager.prototype, {
 		this.chainsaws.push(chainsaw);
 
 		// console.log("Creating bounding circle at offset " + horizontalOffset + ", x, y, d: " + chainsaw.translation.x + ", " + chainsaw.translation.y + ", " + diameter);
-		this.game.addBoundingCircle(horizontalOffset, chainsaw.translation.x, chainsaw.translation.y, diameter/2)
+		if (!_.isUndefined(this.game)) {
+			this.game.addBoundingCircle(horizontalOffset, chainsaw.translation.x, chainsaw.translation.y, diameter/2)
+		}
 
 		return chainsaw;
 	},
