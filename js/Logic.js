@@ -283,7 +283,9 @@ _.extend(Logic.prototype, {
 	},
 	chainsawDeath: function(time, deltax, deltay, saw) {
 		this.died = true;
-		this.audio.chainsawDeath();
+		if (!_.isUndefined(this.audio)) {
+			this.audio.chainsawDeath();
+		}
 
 		var p1x = this.characterBound.maxX;
 		var p1y = this.characterBound.minY;
@@ -425,7 +427,9 @@ _.extend(Logic.prototype, {
 
 			if (this.died) {
 				this.modelManager.KillCharacter();
-				this.animationManager.Reset(time);
+				if (!_.isUndefined(this.animationManager)) {
+					this.animationManager.Reset(time);
+				}
 				if (!_.isUndefined(this.restartFunction)) {
 					setTimeout(this.restartFunction, 750);
 				}

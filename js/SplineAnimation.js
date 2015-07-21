@@ -123,21 +123,18 @@ _.extend(AnimationManager.prototype, {
 	},
 
 	Run: function(time) {
-		console.log("Running");
 		this.state = this.running;
 		this.stateStart = time;
 		this.changeState = true;
 	},
 
 	Jump: function(time) {
-		console.log("Jumping");
 		this.state = this.jumping;
 		this.stateStart = time;
 		this.changeState = true;
 	},
 
 	Fall: function(time) {
-		console.log("Falling");
 		this.state = this.falling;
 		this.stateStart = time;
 		this.changeState = true;

@@ -44,8 +44,6 @@ var ModelManager = function(nodeManager, scene) {
 // Character related functions
 _.extend(ModelManager.prototype, {
 	KillCharacter: function() {
-		// this.characterNode.obj.remove(this.body.obj);
-		console.log("Killing character");
 		this.scene.remove(this.characterNode.obj);
 		this.alive = false;
 	},
@@ -106,8 +104,6 @@ _.extend(ModelManager.prototype, {
 	},
 
 	ResetCharacter: function() {
-		// this.characterNode.applyTran
-		console.log("Resetting character");
 		if (this.alive = true) {
 			this.KillCharacter();
 		}

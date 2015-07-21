@@ -1,4 +1,4 @@
-var BillboardManager = function(nodeManager, camera) {
+window.BillboardManager = function(nodeManager, camera) {
 	this.nodeManager = nodeManager;
 	this.camera = camera;
 

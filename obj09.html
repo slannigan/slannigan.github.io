@@ -6,10 +6,9 @@
 <script src="js/TextureMapping.js"></script>
 <script src="js/ModelNode.js"></script>
 <script src="js/Model.js"></script>
-<script src="js/Billboards.js"></script>
-<script src="js/obj08.js"></script>
+<script src="js/Logic.js"></script>
+<script src="js/obj09.js"></script>
 </head>
-
 <body style="margin: 0px;" onload="init()">
 	<div id="topbar">
 		<div class="content-container">
@@ -22,15 +21,17 @@
 			<a href="obj05.html">5</a>
 			<a href="obj06.html">6</a>
 			<a href="obj07.html">7</a>
-			<a href="obj08.html" class="selected">8</a>
-			<a href="obj09.html">9</a>
+			<a href="obj08.html">8</a>
+			<a href="obj09.html" class="selected">9</a>
 			<a href="obj10.html">10</a>
 		</div>
 	</div>
 	<div class="content-container">
-		<h1>Objective 8: Billboards</h1>
-		<p><b>Instructions: Use arrow keys to move the camera. </b></p>
-		<p>Billboards are camera facing textures. They are implemented in Billboards.js.</p>
+		<h1>Objective 9: Animating Textures</h1>
+		<p><b>Instructions: Hold SPACE to jump. Refresh page to restart demo.</b></p>
+		<p>Animated textures are implemented in TextureMapping.js. An animation is a
+			predefined array of objects, where each object has a texture and a duration (the
+			amount of time before the next texture will be shown). </p>
 		<div id="canvas-container" class="canvasContainer">
 		</div>
 	</div>

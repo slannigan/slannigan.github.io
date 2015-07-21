@@ -5,7 +5,9 @@ window.ParticleManager = function(nodeManager, camera) {
 	this.particlesOn = true;
 	this.toggleParticles = false;
 
-	this.billboardManager = new BillboardManager(nodeManager, camera);
+	if (!_.isUndefined(window.BillboardManager)) {
+		this.billboardManager = new BillboardManager(nodeManager, camera);
+	}
 
 	var self = this;
 	document.addEventListener('keydown', function(e) {
@@ -75,9 +77,16 @@ var Particle = function(startPoint, speed, size, ttl, system) {
 	this.system = system;
 
 	// this.billboard = new Billboard(size, size, startPoint, system.image);
-	this.billboard = this.system.billboardManager.CreateBillboard(size, size, startPoint, system.image);
-	// this.system.obj.add(this.billboard.texture);
-	this.system.container.addChild(this.billboard.texture);
+	if (!_.isUndefined(this.system.billboardManager) && !_.isNull(this.system.billboardManager)) {
+		this.billboard = this.system.billboardManager.CreateBillboard(size, size, startPoint, system.image);
+		// this.system.obj.add(this.billboard.texture);
+		this.system.container.addChild(this.billboard.texture);
+	}
+	else {
+		this.billboard = this.system.nodeManager.CreateTextureNode(size, size, system.image, false, size, size, false);
+		this.billboard.translate(startPoint.x, startPoint.y, startPoint.z);
+		this.system.container.addChild(this.billboard);
+	}
 }
 
 _.extend(Particle.prototype, {
@@ -88,7 +97,12 @@ _.extend(Particle.prototype, {
 			// console.log("Dead");
 			this.isDead = true;
 			// this.system.obj.remove(this.billboard.texture);
-			this.system.container.removeChild(this.billboard.texture);
+			if (!_.isUndefined(this.system.billboardManager) && !_.isNull(this.system.billboardManager)) {
+				this.system.container.removeChild(this.billboard.texture);
+			}
+			else {
+				this.system.container.removeChild(this.billboard);
+			}
 			return;
 		}
 
@@ -96,7 +110,14 @@ _.extend(Particle.prototype, {
 		var y = this.system.gravity * deltaTime + this.speed.y;
 		var z = this.speed.z;
 
-		this.billboard.update(x,y,z,1);
+		if (!_.isUndefined(this.system.billboardManager) && !_.isNull(this.system.billboardManager)) {
+			// console.log("Attempting to update billboard");
+			this.billboard.update(x,y,z,1);
+		}
+		else {
+			// console.log("Updating texture");
+			this.billboard.translate(x,y,z);
+		}
 	}
 });
 
