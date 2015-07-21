@@ -53,16 +53,16 @@ _.extend(ParticleManager.prototype, {
 
 	createBloodSplatter: function(startPoint, directionVector, time) {
 		var startPointDistribution = new THREE.Vector3(0.1, 0.1, 0);
+		var accelerationVector = new THREE.Vector3(0, -0.98, 0);
 		var sizeAvg = 0.3;
 		var sizeVar = 0.2;
 		var ttlAvg = 0.45;
 		var ttlVar = 0.15;
-		var hasGravity = true;
 		var creationRate = 50;
 		var image = "blood";
 		var alwaysOn = false;
 		
-		var particleSystem = new ParticleSystem(this.nodeManager, this.billboardManager, startPoint, startPointDistribution, directionVector, sizeAvg, sizeVar, ttlAvg, ttlVar, hasGravity, creationRate, image, alwaysOn, time);
+		var particleSystem = new ParticleSystem(this.nodeManager, this.billboardManager, startPoint, startPointDistribution, directionVector, accelerationVector, sizeAvg, sizeVar, ttlAvg, ttlVar, creationRate, image, alwaysOn, time);
 		// return particleSystem;
 		this.container.addChild(particleSystem.container);
 		this.particleSystems.push(particleSystem);
@@ -106,9 +106,9 @@ _.extend(Particle.prototype, {
 			return;
 		}
 
-		var x = this.speed.x;
-		var y = this.system.gravity * deltaTime + this.speed.y;
-		var z = this.speed.z;
+		var x = this.system.accelerationVector.x * deltaTime + this.speed.x;
+		var y = this.system.accelerationVector.y * deltaTime + this.speed.y;
+		var z = this.system.accelerationVector.z * deltaTime + this.speed.z;
 
 		if (!_.isUndefined(this.system.billboardManager) && !_.isNull(this.system.billboardManager)) {
 			// console.log("Attempting to update billboard");
@@ -121,7 +121,7 @@ _.extend(Particle.prototype, {
 	}
 });
 
-var ParticleSystem = function(nodeManager, billboardManager, startPoint, startPointDistribution, directionVector, sizeAvg, sizeVar, ttlAvg, ttlVar, hasGravity, creationRate, image, alwaysOn, time) {
+var ParticleSystem = function(nodeManager, billboardManager, startPoint, startPointDistribution, directionVector, accelerationVector, sizeAvg, sizeVar, ttlAvg, ttlVar, creationRate, image, alwaysOn, time) {
 	this.nodeManager = nodeManager;
 	this.billboardManager = billboardManager;
 
@@ -139,11 +139,11 @@ var ParticleSystem = function(nodeManager, billboardManager, startPoint, startPo
 	this.maxZ = startPoint.z - startPointDistribution.z;
 
 	this.directionVector = directionVector;
+	this.accelerationVector = accelerationVector;
 	this.sizeAvg = sizeAvg;
 	this.sizeVar = sizeVar;
 	this.ttlAvg = ttlAvg;
 	this.ttlVar = ttlVar;
-	this.gravity = hasGravity ? -0.98 : 0;
 	this.creationRate = creationRate;
 	this.numToCreate = creationRate >= 1 ? creationRate : 1;
 
@@ -153,9 +153,6 @@ var ParticleSystem = function(nodeManager, billboardManager, startPoint, startPo
 	if (!alwaysOn) {
 		this.createParticles();
 	}
-
-	// particleSystems.push(this);
-	// particleContainer.addChild(this.container);
 }
 
 _.extend(ParticleSystem.prototype, {
