@@ -44,12 +44,13 @@ _.extend(NodeManager.prototype, {
 
 	CreateAnimatedTextureNode: function(planeSizeX, planeSizeY, textureAnimation, loops) {
         var container = this.CreateModelNode();
-        var anim = this.textureManager.AnimationLibrary[textureAnimation];
-
-        if (_.isUndefined(anim)) {
-        	console.log("Animation undefined");
+        
+        if (_.isUndefined(this.textureManager)) {
+        	// console.log("Animation undefined");
         	return container;
         }
+
+        var anim = this.textureManager.AnimationLibrary[textureAnimation];
         
         var textures = [];
         var timeSoFar = 0;

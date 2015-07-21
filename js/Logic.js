@@ -376,7 +376,9 @@ _.extend(Logic.prototype, {
 
 			if (!this.isJumping && deltaY > 0) {
 				this.isJumping = true;
-				this.audio.startJump();
+				if (!_.isUndefined(this.audio)) {
+					this.audio.startJump();
+				}
 				if (!_.isUndefined(this.animationManager)) {
 					this.animationManager.Jump(time);
 				}
@@ -384,14 +386,18 @@ _.extend(Logic.prototype, {
 			else if (!this.isFalling && this.isJumping && deltaY <= 0) {
 				this.isJumping = false;
 				this.isFalling = true;
-				this.audio.startFall();
+				if (!_.isUndefined(this.audio)) {
+					this.audio.startFall();
+				}
 				if (!_.isUndefined(this.animationManager)) {
 					this.animationManager.Fall(time);
 				}
 			}
 			else if (this.isFalling && !this.isJumping && deltaY == 0) {
 				this.isFalling = false;
-				this.audio.startLand();
+				if (!_.isUndefined(this.audio)) {
+					this.audio.startLand();
+				}
 				if (!_.isUndefined(this.animationManager)) {
 					this.animationManager.Run(time);
 				}
