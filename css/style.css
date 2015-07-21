@@ -129,6 +129,44 @@ h2 {
 	background-color: rgba(0,0,0,0.3);
 }
 
+#start-menu {
+	background-image: url("../images/main-menu.png");
+}
+
+#start-menu #text {
+	font-size: 20px;
+	float: right;
+	margin-right: 160px;
+	margin-top: 220px;
+}
+
+#start-menu #start {
+	font-size: 30px;
+}
+
+/*http://fredericiana.com/2012/11/04/html5-blink-tag/*/
+.blink {
+    animation-duration: 0.5s;
+    animation-name: blink;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    animation-timing-function: ease-in-out;
+}
+@keyframes blink {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 1;
+    }
+    51% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
 #pause-menu {
 	background-image: url("../images/paused-orbitron.png");
 	background-repeat: no-repeat;

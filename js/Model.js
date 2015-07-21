@@ -245,8 +245,13 @@ _.extend(ModelManager.prototype, {
 			// map = "HHHHHHH.lllll..ll.LL.ll...llllllllllllllllllllllllllllllllllllllllllllllllll";
 			// map = "HHHHHHHHHHMMMMM";
 			// map = "lllllllcllllHHHHHHlllllllllllllllllllllllllllllllllllll";
-			map = "HHHHHHH..lllllllll..llllllcllllll...MMMMMMMcMMMCMMMcMMMMMMMM...eeeeeeeeeeeeeeeeeH"
-			// map = "HHHHHHHHHHHHCHHHHHHLLL"
+			// map = "HHHHHHH..lllllllll..llllllcllllll...MMMMMMMcMMMCMMMcMMMMMMMM...eeeeeeeeeeeeeeeeeH"
+			
+			map = "sssssss..lllllllll..llllllcllllll...MMMMMCMMMMMMMcMMMMMM..";
+			map += "...lllllllll....mmmm.....hhh..llllcllllllcl...MMMMMMMCMMMcMMMCMMMM";
+			map += "...llllllll...lll....l..ll...m..llll..MMC..llllc...llcllllclllllll..";
+			map += "mc..lllllclllllcl...eeeeeeeeeeeeeeeeeH";
+			// map = "ssssss......llllllll...lll....l..ll...m..llll..MMC..llllc...lcllllclll................e";
 		}
 
 		var mapNode = this.nodeManager.CreateModelNode();
