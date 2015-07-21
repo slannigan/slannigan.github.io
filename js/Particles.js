@@ -1,4 +1,4 @@
-var ParticleManager = function(nodeManager, camera) {
+window.ParticleManager = function(nodeManager, camera) {
 	this.nodeManager = nodeManager;
 	this.container = this.nodeManager.CreateModelNode();
 	this.particleSystems = [];

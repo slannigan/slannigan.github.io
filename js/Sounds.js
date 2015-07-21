@@ -1,4 +1,4 @@
-var Sounds = function() {
+window.Sounds = function() {
 	this.music = document.getElementById("backgroundMusic");
 
 	this.run = document.getElementById("runSound");

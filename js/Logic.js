@@ -22,6 +22,14 @@ document.addEventListener('keyup', function(e) {
     }
 });
 
+// http://stackoverflow.com/questions/22559830/html-prevent-space-bar-from-scrolling-page
+window.onkeydown = function(e) {
+    if(e.keyCode == 32 && e.target == document.body) {
+        e.preventDefault();
+        return false;
+    }
+};
+
 var BoundingGeometry = function() {
 
 }
@@ -175,7 +183,10 @@ var Logic = function(nodeManager, modelManager, scene, camera, light, character,
 	this.died = false;
 	this.gameEnd = false;
 
-	this.audio = new Sounds();
+	if (!_.isUndefined(window.Sounds)) {
+		this.audio = new Sounds();
+	}
+
 	this.firstCall = true;
 	this.isJumping = false;
 	this.isFalling = false;
@@ -187,7 +198,9 @@ var Logic = function(nodeManager, modelManager, scene, camera, light, character,
 	this.bloodTrailInterval = 10;
 	this.bloodTrailTime = this.bloodTrailInterval;
 
-	this.particleManager = new ParticleManager(nodeManager, camera);
+	if (!_.isUndefined(window.ParticleManager)) {
+		this.particleManager = new ParticleManager(nodeManager, camera);
+	}
 
 	this.restartFunction;
 }
@@ -277,7 +290,9 @@ _.extend(Logic.prototype, {
 		var speedX = 0.3*(p1x - saw.centreX)*Math.abs(deltax);
 		var speedY = 0.3*(p1y - saw.centreY)*Math.abs(deltay) + 0.2;
 	    var directionVector = new THREE.Vector3(speedX,speedY,0);
-    	this.particleManager.createBloodSplatter(startPoint, directionVector, time);
+	    if (!_.isUndefined(this.particleManager) && !_.isNull(this.particleManager)) {
+	    	this.particleManager.createBloodSplatter(startPoint, directionVector, time);
+	    }
 	},
 	animateCharacter: function(time) {
 		if (this.firstCall) {
@@ -419,7 +434,9 @@ _.extend(Logic.prototype, {
 		}
 	},
 	renderParticles: function(time) {
-		this.particleManager.RenderParticles(time);
+		if (!_.isUndefined(this.particleManager) && !_.isNull(this.particleManager)) {
+			this.particleManager.RenderParticles(time);
+		}
 	}
 });
 

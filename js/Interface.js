@@ -29,7 +29,7 @@ var Interface = function(canvasContainer, renderer, textureManager, nodeManager,
 	    if (unicode == 80) { 	  // 'p' key
 	    	self.TogglePaused();
 	    }
-	    else if (unicode == 82) {
+	    else if (unicode == 82) { // 'r' key
 	    	self.RestartGame();
 	    }
 
