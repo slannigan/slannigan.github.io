@@ -53,6 +53,8 @@ var Interface = function(canvasContainer, renderer, textureManager, nodeManager,
         self.game.animateCharacter(time);
         self.game.renderParticles(time);
 
+        self.UpdateTime(time);
+
         self.renderer.render(self.scene, self.camera);
 	}
 
@@ -60,6 +62,8 @@ var Interface = function(canvasContainer, renderer, textureManager, nodeManager,
 	this.pauseMenu = document.getElementById("pause-menu");
 	this.blackScreen = document.getElementById("black");
 	this.winScreen = document.getElementById("win");
+	this.hud = document.getElementById("hud");
+	this.scoreText = document.getElementById("score-text");
 
 	this.ShowElement(this.startMenu);
 }
@@ -92,6 +96,7 @@ _.extend(Interface.prototype, {
 	StartPlay: function() {
 		this.clock = new THREE.Clock();
 		this.HideElement(this.startMenu);
+		this.ShowElement(this.hud);
 
 		this.modelManager = new ModelManager(this.nodeManager, this.scene);
 		this.character = this.modelManager.CreateMeatBoy(this.animationManager);
@@ -117,6 +122,15 @@ _.extend(Interface.prototype, {
 	    this.animationManager.Animate(0);
 
 		this.render();
+	},
+
+	UpdateTime: function(time) {
+		var s = Math.floor(time);
+		var ms = Math.floor((time-s)*100);
+		if (ms < 10) {
+			ms = "0" + ms;
+		}
+		this.scoreText.innerHTML = s + ":" + ms;
 	},
 
 	RestartGame: function() {
