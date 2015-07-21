@@ -25,14 +25,21 @@
 		</div>
 	</div>
 	<div class="content-container">
-		<h1>Objective 1: Modelling</h1>
-		<h2>Character</h2>
-		<p>Meat Boy</p>
-		<div id="canvas-container-character" class="canvasContainer">
-		</div>
-		<h2>Level</h2>
-		<p>Level made of a string</p>
-		<div id="canvas-container-level" class="canvasContainer">
+		<h1>Objective 1: Modelling the Scene and Character</h1>
+		<p>To model Meat Boy, five boxes were created and positioned accordingly.</p>
+		<p>To model the level, a text parser was created to make a level based off of a text string.
+			This (zoomed out) level is created using the text string "sss..h.m.l..H.M.L..MMcMCMcM..eee".
+			'h', 'm', and 'l' are rooftops at high, medium, and low levels. 'H', 'M', and 'L' are 
+			corridors at high, medium, and low levels. 's' and 'e' are start blocks and end blocks.
+			'c' and 'C' are chainsaws - lowercase chainsaws are on the ground, uppercase on ceilings. 
+		</p>
+		<p>
+			Meat Boy, level blocks, and chainsaws all use texture mapping, which is implemented in 
+			<a href="obj06.html">Objective 6</a>.
+			When a texture mapper is not provided, textures appear blue if they are background textures,
+			and green otherwise.
+		</p>
+		<div id="canvas-container" class="canvasContainer">
 		</div>
 	</div>
 </body>

@@ -79,9 +79,15 @@ h2 {
 #pause-menu,
 #black,
 #win {
+	text-align: center;
+}
+
+#start-menu,
+#pause-menu,
+#black,
+#win {
 	width: 850px;
 	height: 400px;
-	text-align: center;
 }
 
 #start-menu,
