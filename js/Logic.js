@@ -69,8 +69,10 @@ _.extend(BoundingBox.prototype, BoundingGeometry.prototype, {
 	},
 
 	intersectsX: function(minX, maxX, minY, maxY) {
-		if (maxX >= this.minX && minX <= this.minX && 
-			((minY > this.minY && minY < this.maxY) || (maxY > this.minY && maxY < this.maxY))) {
+		if ((maxX >= this.minX && minX <= this.minX && 
+			((minY > this.minY && minY < this.maxY) || (maxY > this.minY && maxY < this.maxY))) ||
+			(minX <= this.maxX && maxX >= this.minX && 
+			((minY > this.minY && minY < this.maxY) || (maxY > this.minY && maxY < this.maxY)))) {
 			return true;
 		}
 		return false;

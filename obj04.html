@@ -1,0 +1,42 @@
+<html>
+<head>
+<link rel="stylesheet" href="css/style.css"/>
+<script src="ext/three.js"></script>
+<script src="ext/underscore.js"></script>
+<script src="js/ModelNode.js"></script>
+<script src="js/Model.js"></script>
+<script src="js/Logic.js"></script>
+<script src="js/obj04.js"></script>
+</head>
+<body style="margin: 0px;" onload="init()">
+	<div id="topbar">
+		<div class="content-container">
+			<a href="index.html" id="go-to-main">Go to main</a>
+			Jump to objective:
+			<a href="obj01.html">1</a>
+			<a href="obj02.html" class="selected">2</a>
+			<a href="obj03.html">3</a>
+			<a href="obj04.html">4</a>
+			<a href="obj05.html">5</a>
+			<a href="obj06.html">6</a>
+			<a href="obj07.html">7</a>
+			<a href="obj08.html">8</a>
+			<a href="obj09.html">9</a>
+			<a href="obj10.html">10</a>
+		</div>
+	</div>
+	<div class="content-container">
+		<h1>Objective 4: Static Collision Detection</h1>
+		<p><b>Instructions: Arrow keys to move.</b></p>
+		<p>This is a more basic version of the collision detection that will be used in the game.
+			When a level is created using a map string, Logic.js reads the string and creates bounding
+			geometries based on where the buildings and chainsaws are. Logic also keeps track of the
+			in game character position - for demo purposes, the character position is tracked using obj04.js.</p>
+		<p>Meat Boy and each building have a bounding box, and each chainsaw
+				has a bounding sphere. Since the game is a side-scroller, only collisions in the 
+				X and Y axes are checked. If Meat Boy is attempting to move in an axis, and a collision is detected in that axis, the movement is cancelled.</p>
+		<div id="canvas-container" class="canvasContainer">
+		</div>
+	</div>
+</body>
+</html>
