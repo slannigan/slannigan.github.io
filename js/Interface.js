@@ -76,11 +76,15 @@ var Interface = function(canvasContainer, renderer, textureManager, nodeManager,
 
 _.extend(Interface.prototype, {
 	ShowElement: function(node) {
-		node.className = "";
+		if (!_.isUndefined(node) && !_.isNull(node)) {
+			node.className = "";
+		}
 	},
 
 	HideElement: function(node) {
-		node.className = "hidden";
+		if (!_.isUndefined(node) && !_.isNull(node)) {
+			node.className = "hidden";
+		}
 	},
 
 	TogglePaused: function() {

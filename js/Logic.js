@@ -405,7 +405,9 @@ _.extend(Logic.prototype, {
 				}
 			}
 			else if (this.isFalling && !this.isJumping && deltaY == 0) {
+				// console.log("Landed");
 				this.isFalling = false;
+				this.bloodTrailTime = this.bloodTrailInterval - 1;
 				if (!_.isUndefined(this.audio)) {
 					this.audio.startLand();
 				}
@@ -421,10 +423,11 @@ _.extend(Logic.prototype, {
 
 			if (deltaY == 0 && !this.isFalling && !this.isJumping) {
 				this.bloodTrailTime = (this.bloodTrailTime + 1) % this.bloodTrailInterval;
+				// console.log(this.bloodTrailTime)
 				if (this.bloodTrailTime == 0) {
 					var bloodTrail = this.nodeManager.CreateAnimatedTextureNode(2.5, 2.5, 'tail', false);
 					bloodTrail.translate(((this.characterBound.minX + this.characterBound.maxX)/2) - this.characterWidth,
-										 (this.characterBound.minY + this.characterBound.maxY)/2, 0);
+										 (this.characterBound.minY + this.characterBound.maxY + 0.5)/2, 0);
 					this.scene.add(bloodTrail.obj);
 				}
 			}
