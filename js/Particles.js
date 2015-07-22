@@ -14,7 +14,7 @@ window.ParticleManager = function(nodeManager, camera) {
 	    // http://www.javascriptkit.com/javatutors/javascriptkey2.shtml
 	    var unicode = e.keyCode? e.keyCode : e.charCode;
 
-	    if (unicode == 80) {      // 'p' key
+	    if (unicode == 79) {      // 'o' key
 	        self.toggleParticles = true;
 	    }
 	});
@@ -62,10 +62,11 @@ _.extend(ParticleManager.prototype, {
 		var image = "blood";
 		var alwaysOn = false;
 		
-		var particleSystem = new ParticleSystem(this.nodeManager, this.billboardManager, startPoint, startPointDistribution, directionVector, accelerationVector, sizeAvg, sizeVar, ttlAvg, ttlVar, creationRate, image, alwaysOn, time);
-		// return particleSystem;
-		this.container.addChild(particleSystem.container);
+		if (this.particlesOn) {
+			var particleSystem = new ParticleSystem(this.nodeManager, this.billboardManager, startPoint, startPointDistribution, directionVector, accelerationVector, sizeAvg, sizeVar, ttlAvg, ttlVar, creationRate, image, alwaysOn, time);
+			this.container.addChild(particleSystem.container);
 		this.particleSystems.push(particleSystem);
+		}
 	}
 });
 

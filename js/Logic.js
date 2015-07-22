@@ -232,7 +232,6 @@ _.extend(Logic.prototype, {
 		this.isJumping = false;
 		this.isFalling = false;
 		this.characterSpeed = this.speed;
-		this.audio.startLand();
 	},
 	storeMapInfo: function(map, unitSize, startPosX, startPosY) {
 		// console.log("Storing map info");
@@ -282,7 +281,6 @@ _.extend(Logic.prototype, {
 			this.camera.position.x += this.characterSpeed;
 			this.camera.lookAt(this.scene.position);
 			this.light.position.x += this.characterSpeed;
-			console.log(this.characterLocationIndex);
 		}
 	},
 	chainsawDeath: function(time, deltax, deltay, saw) {
@@ -306,7 +304,7 @@ _.extend(Logic.prototype, {
 		if (this.firstCall) {
 			this.firstCall = false;
 			// console.log("Start running");
-			// this.audio.startRunning();
+			this.audio.startRunning();
 		}
 		if (!this.died) {
 			var deltaTime = time - this.lastTimeOnGround;
@@ -387,6 +385,15 @@ _.extend(Logic.prototype, {
 					this.animationManager.Jump(time);
 				}
 			}
+			else if (!this.isJumping && deltaY < 0) {
+				this.isFalling = true;
+				if (!_.isUndefined(this.audio)) {
+					this.audio.startFall();
+				}
+				if (!_.isUndefined(this.animationManager)) {
+					this.animationManager.Fall(time);
+				}
+			}
 			else if (!this.isFalling && this.isJumping && deltaY <= 0) {
 				this.isJumping = false;
 				this.isFalling = true;
@@ -424,7 +431,9 @@ _.extend(Logic.prototype, {
 
 			if (this.characterBound.minY < -20) {
 				this.died = true;
-				this.audio.die();
+				if (!_.isUndefined(this.audio)) {
+					this.audio.die();
+				}
 			}
 
 			if (this.died) {
@@ -438,7 +447,9 @@ _.extend(Logic.prototype, {
 			}
 			else if (this.characterLocationIndex == this.endIndex && !this.gameEnd) {
 				this.gameEnd = true;
-				this.audio.endGame();
+				if (!_.isUndefined(this.audio)) {
+					this.audio.endGame();
+				}
 				if (!_.isUndefined(this.endGameFunction)) {
 					this.endGameFunction();
 				}
@@ -458,7 +469,9 @@ _.extend(Logic.prototype, {
 // Functions called by Interface
 _.extend(Logic.prototype, {
 	togglePaused: function(paused) {
-		this.audio.togglePaused(paused);
+		if (!_.isUndefined(this.audio)) {
+			this.audio.togglePaused(paused);
+		}
 	},
 	restart: function() {
 		this.died = false;

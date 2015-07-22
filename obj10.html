@@ -57,7 +57,11 @@
 
 	<div class="content-container">
 		<h1>Objective 10: User Interface</h1>
-		<p>This game was created using WebGL and THREE.js, an API for WebGL.</p>
+		<p>The interface is implemented in Interface.js. The interface adds several things: a start
+			menu, a pause menu (press "P" in game), the ability to restart either by dying or by pressing
+			"R", and an end game screen. The interface also keeps track of the time that has passed in the
+			top right of the screen. The interface visuals are created using html elements and css styling.
+			The interface also manages some aspects of game setup and creation.</p>
 		<div id="canvas-container" class="canvasContainer">
 			<div id="hud" class="hidden">
 				<div id="score">
@@ -80,7 +84,11 @@
 			<div id="pause-menu" class="hidden">
 			</div>
 			<div id="win" class="hidden">
-				YOU WIN!!!
+				<div id="win-text">
+					YOU WIN!!!<br><br>
+					Congratulations! :)<br><br>
+					Press "R" to restart
+				</div>
 			</div>
 			<div id="black">
 			</div>

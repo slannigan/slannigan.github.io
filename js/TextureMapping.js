@@ -180,6 +180,7 @@ _.extend(TextureManager.prototype, {
             repeatY = planeSizeY/textureSizeY;
         }
 
+        var self = this;
         var m = new THREE.ShaderMaterial({
             uniforms: THREE.UniformsUtils.merge([
                 THREE.UniformsLib['lights'],
@@ -188,7 +189,7 @@ _.extend(TextureManager.prototype, {
                     texture: {type: 't', value: null},
                     textRepeatX: {type: 'f', value: repeatX},
                     textRepeatY: {type: 'f', value: repeatY},
-                    textureOn: {type: 'i', value: 1},
+                    textureOn: {type: 'i', value: self.texturesOn ? 1 : 0 },
                     isBg: { type: 'i', value: isBg ? 1 : 0 }
                 }
             ]),

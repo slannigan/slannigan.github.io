@@ -125,8 +125,13 @@ h2 {
 	color: #fff;
 }
 
+#win-text {
+	margin-top: 80px;
+}
+
 #start-menu,
-#pause-menu {
+#pause-menu,
+#win {
 	background-color: rgba(0,0,0,0.3);
 }
 

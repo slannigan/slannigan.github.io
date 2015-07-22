@@ -21,6 +21,8 @@ var Interface = function(canvasContainer, renderer, textureManager, nodeManager,
 	this.started = false;
 	this.restartTime = 500;
 
+	this.gameEnded = false;
+
 	var self = this;
 
 	document.addEventListener('keydown', function(e) {
@@ -28,7 +30,9 @@ var Interface = function(canvasContainer, renderer, textureManager, nodeManager,
 	    var unicode = e.keyCode? e.keyCode : e.charCode;
 
 	    if (unicode == 80) { 	  // 'p' key
-	    	self.TogglePaused();
+	    	if (!self.gameEnded) {
+	    		self.TogglePaused();
+	    	}
 	    }
 	    else if (unicode == 82) { // 'r' key
 	    	self.RestartGame();
@@ -63,6 +67,7 @@ var Interface = function(canvasContainer, renderer, textureManager, nodeManager,
 	this.pauseMenu = document.getElementById("pause-menu");
 	this.blackScreen = document.getElementById("black");
 	this.winScreen = document.getElementById("win");
+	this.winText = document.getElementById("win-text");
 	this.hud = document.getElementById("hud");
 	this.scoreText = document.getElementById("score-text");
 
@@ -126,16 +131,19 @@ _.extend(Interface.prototype, {
 	},
 
 	UpdateTime: function(time) {
-		var s = Math.floor(time);
-		var ms = Math.floor((time-s)*100);
-		if (ms < 10) {
-			ms = "0" + ms;
+		if (!this.gameEnded) {
+			var s = Math.floor(time);
+			var ms = Math.floor((time-s)*100);
+			if (ms < 10) {
+				ms = "0" + ms;
+			}
+			this.scoreText.innerHTML = s + ":" + ms;
 		}
-		this.scoreText.innerHTML = s + ":" + ms;
 	},
 
 	RestartGame: function() {
 		// console.log("Restart");
+		this.gameEnded = false;
 		var self = this;
 
 		this.blackScreen.className = "fadeOutInOut";
@@ -147,19 +155,21 @@ _.extend(Interface.prototype, {
 			self.clock = new THREE.Clock();
 			self.animationManager.Run(0);
 		    self.animationManager.Animate(0);
+		    self.HideElement(self.winScreen);
 			self.game.restart();
 		}, this.restartTime/2);
 	},
 
 	EndGame: function() {
 		this.winScreen.className = "";
+		this.gameEnded = true;
 
 		var self = this;
 		var showScreen = function() {
-			self.winScreen.className = "";
+			self.winText.className = "";
 		}
 		var hideScreen = function() {
-			self.winScreen.className = "hidden";
+			self.winText.className = "hidden";
 		}
 
 		var blinkTime = 300;
@@ -169,6 +179,7 @@ _.extend(Interface.prototype, {
 			hideScreen();
 		}, blinkTime)
 		setTimeout(function() {
+			self.ShowElement(self.winScreen);
 			showScreenTimer = setInterval(function() {
 				showScreen();
 			}, blinkTime);
