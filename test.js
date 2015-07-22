@@ -24,9 +24,6 @@ function init() {
     camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT,
                                                  NEAR, FAR);
     scene.add(camera);
-    // camera.position.set(startX,0,30);
-    // camera.position.set(0,0,30);
-    // camera.lookAt(scene.position);
  
     // RENDERER
     renderer = new THREE.WebGLRenderer({
@@ -37,28 +34,10 @@ function init() {
     renderer.setClearColor(0xb5b2c5);
     canvasContainer.appendChild( renderer.domElement );
 
-    // canvasContainer.appendChild( renderer.domElement );
- 
-    // Main polygon
-    // character = TextureMapper(2, 1, 'meatboy.png', true, 0.5, 0.5);
-    // if (_.isNull(character)) {
-    //     return;
-    // }
-    // // textures.push(character)
-    // scene.add(character);
-
-    // particleManager = new ParticleManager();
-    // scene.add(particleManager.container.obj);
-
-    // var startPoint = new THREE.Vector3(15,0,0);
-    // var directionVector = new THREE.Vector3(0,0.3,0);
-    // game.particleManager.createBloodSplatter(startPoint, directionVector, 0);
-
     // Create light
     var light = new THREE.PointLight(0xffffff, 1.0);
     // We want it to be very close to our character
     light.position.set(60,30,30);
-    // light.position.set(100,10,-50);
     scene.add(light);
     var ambience = new THREE.AmbientLight(0x999999);
     scene.add(ambience);
