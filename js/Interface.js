@@ -134,7 +134,7 @@ _.extend(Interface.prototype, {
 	},
 
 	RestartGame: function() {
-		console.log("Restart");
+		// console.log("Restart");
 		var self = this;
 
 		this.blackScreen.className = "fadeOutInOut";

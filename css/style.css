@@ -72,6 +72,7 @@ h2 {
 .canvasContainer {
 	/*border: 1px solid #000;*/
 	margin-bottom: 40px;
+	font-family: "Lucida Console", "monospace";
 }
 
 .canvasContainer,
@@ -136,8 +137,8 @@ h2 {
 #start-menu #text {
 	font-size: 20px;
 	float: right;
-	margin-right: 160px;
-	margin-top: 220px;
+	margin-right: 50px;
+	margin-top: 250px;
 }
 
 #start-menu #start {

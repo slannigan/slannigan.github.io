@@ -1,7 +1,6 @@
 // Logic is dependent on ParticleManager.
 
 var spacePressed = false;
-var spacePressedTime;
 
 document.addEventListener('keydown', function(e) {
     // http://www.javascriptkit.com/javatutors/javascriptkey2.shtml
@@ -9,7 +8,6 @@ document.addEventListener('keydown', function(e) {
 
     if (unicode == 32) {      // space key
         spacePressed = true;
-    	spacePressedTime = clock.getElapsedTime();
     }
 });
 
@@ -87,7 +85,7 @@ var BoundingCircle = function(centreX, centreY, radius) {
 	this.centreX = centreX;
 	this.centreY = centreY;
 	this.radius = radius;
-	console.log("x, y, r: " + this.centreX + ", " + this.centreY + ", " + this.radius);
+	// console.log("x, y, r: " + this.centreX + ", " + this.centreY + ", " + this.radius);
 }
 
 // Inherit all other methods of ModelNode.
@@ -134,7 +132,7 @@ _.extend(BoundingCircle.prototype, BoundingGeometry.prototype, {
 
 	intersectsX: function(minX, maxX, minY, maxY) {
 		var intersects = (this.intersects(minX, maxX, minY, minY) || this.intersects(minX, maxX, maxY, maxY));
-		if (intersects) console.log("intersectsX with line: (" + minX + ", " + minY + "), (" + maxX + ", " + minY + ")");
+		// if (intersects) console.log("intersectsX with line: (" + minX + ", " + minY + "), (" + maxX + ", " + minY + ")");
 		return intersects;
 	},
 
@@ -233,20 +231,23 @@ _.extend(Logic.prototype, {
 		this.isJumping = false;
 		this.isFalling = false;
 		this.characterSpeed = this.speed;
+		this.audio.startLand();
 	},
 	storeMapInfo: function(map, unitSize, startPosX, startPosY) {
-		console.log("Storing map info");
+		// console.log("Storing map info");
 		this.map = map;
 		this.unitSize = unitSize;
 		
 		for (var i = 0; i < map.length; i++) {
 			var c = map.charAt(i);
+			// if (i < 50) console.log("Reading char " + c + ", index " + i);
 			if (c != "c" && c != "C") {
 				this.boundingGeometries.push([])
 			}
 			if (c == "e" && _.isUndefined(this.endIndex)) {
 				this.endIndex = i+1;
 				this.stopCamIndex = this.endIndex - this.stopMovingCameraIndexGap;
+				// console.log("Setting stopCamIndex: " + this.stopCamIndex);
 				// break;
 			}
 		}
@@ -267,7 +268,7 @@ _.extend(Logic.prototype, {
 		this.boundingGeometries[index].push(circle);
 	},
 	setScene: function() {
-		console.log("Setting scene, firstCall: " + this.firstCall);
+		// console.log("Setting scene, firstCall: " + this.firstCall);
 		this.scene.position.set(this.startPosX, this.startPosY, 0);
 		this.camera.position.set(this.startPosX, this.startPosY, this.cameraDistanceZ);
 		this.camera.lookAt(this.scene.position);
@@ -279,6 +280,7 @@ _.extend(Logic.prototype, {
 			this.camera.position.x += this.characterSpeed;
 			this.camera.lookAt(this.scene.position);
 			this.light.position.x += this.characterSpeed;
+			console.log(this.characterLocationIndex);
 		}
 	},
 	chainsawDeath: function(time, deltax, deltay, saw) {
@@ -308,9 +310,7 @@ _.extend(Logic.prototype, {
 			var deltaTime = time - this.lastTimeOnGround;
 			var gravitySpeed = this.gravity * deltaTime;
 			var upSpeed = this.jumpSpeed + (this.jumpSpeedDeceleration * deltaTime);
-			// if (spacePressed && time - spacePressedTime < this.maxJumpReachedAtTime) {
-				// this.initialVelocity += this.jumpSpeed;
-			// }
+
 			if (spacePressed && upSpeed > 0 && !this.isFalling) {
 				this.initialVelocity += upSpeed;
 			}
