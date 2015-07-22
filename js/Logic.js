@@ -151,6 +151,7 @@ var Logic = function(nodeManager, modelManager, scene, camera, light, character,
 	this.animationManager = animationManager;
 
 	this.map = "";
+	this.mapLength = 0;
 	this.unitSize = 1; // Default value
 
 	this.startPosX = 26;
@@ -243,9 +244,10 @@ _.extend(Logic.prototype, {
 			// if (i < 50) console.log("Reading char " + c + ", index " + i);
 			if (c != "c" && c != "C") {
 				this.boundingGeometries.push([])
+				this.mapLength++;
 			}
 			if (c == "e" && _.isUndefined(this.endIndex)) {
-				this.endIndex = i+1;
+				this.endIndex = this.mapLength+1;
 				this.stopCamIndex = this.endIndex - this.stopMovingCameraIndexGap;
 				// console.log("Setting stopCamIndex: " + this.stopCamIndex);
 				// break;
@@ -436,6 +438,7 @@ _.extend(Logic.prototype, {
 			}
 			else if (this.characterLocationIndex == this.endIndex && !this.gameEnd) {
 				this.gameEnd = true;
+				this.audio.endGame();
 				if (!_.isUndefined(this.endGameFunction)) {
 					this.endGameFunction();
 				}

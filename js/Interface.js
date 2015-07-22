@@ -1,4 +1,4 @@
-var Interface = function(canvasContainer, renderer, textureManager, nodeManager, scene, camera, light) {
+var Interface = function(canvasContainer, renderer, textureManager, nodeManager, scene, camera, light, map) {
 	this.canvasContainer = canvasContainer;
 	this.renderer = renderer;
 	this.textureManager = textureManager;
@@ -7,6 +7,7 @@ var Interface = function(canvasContainer, renderer, textureManager, nodeManager,
 	this.scene = scene;
 	this.camera = camera;
 	this.light = light;
+	this.map = map;
 
 	// var modelManager = new ModelManager(nodeManager, scene);
 	this.character;
@@ -106,7 +107,7 @@ _.extend(Interface.prototype, {
 	    this.game.setScene();
 	    this.scene.add(this.game.particleManager.container.obj);
 
-	    this.level = this.modelManager.CreateLevel();
+	    this.level = this.modelManager.CreateLevel(this.map);
 
 	    var self = this;
 	    var restartFunction = function() {

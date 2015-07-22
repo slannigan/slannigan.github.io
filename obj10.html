@@ -1,0 +1,90 @@
+<html>
+<head>
+<link rel="stylesheet" href="css/style.css"/>
+<script src="ext/three.js"></script>
+<script src="ext/underscore.js"></script>
+<script src="js/TextureMapping.js"></script>
+<script src="js/ModelNode.js"></script>
+<script src="js/Model.js"></script>
+<script src="js/Sounds.js"></script>
+<script src="js/Logic.js"></script>
+<script src="js/Billboards.js"></script>
+<script src="js/Particles.js"></script>
+<script src="js/SplineAnimation.js"></script>
+<script src="js/Interface.js"></script>
+<script src="js/obj10.js"></script>
+</head>
+<body style="margin: 0px;" onload="init()">
+	<!-- Game sounds -->
+	<div class="hidden">
+		<audio id="runSound">
+			<source type="audio/wav" src="sounds/Meat_feet_fast1.wav"></source>
+		</audio>
+		<audio id="jumpSound">
+			<source type="audio/wav" src="sounds/Meat_jumps0.wav"></source>
+		</audio>
+		<audio id="landSound">
+			<source type="audio/wav" src="sounds/Meat_Landing0.wav"></source>
+		</audio>
+		<audio id="deathSound">
+			<source type="audio/wav" src="sounds/meat_death1.wav"></source>
+		</audio>
+		<audio id="sawSound">
+			<source type="audio/wav" src="sounds/SawDeath0.wav"></source>
+		</audio>
+
+		<audio id="backgroundMusic">
+			<source type="audio/mpeg" src="sounds/Danny Baranowsky - Super Meat Boy! - Digital Special Edition Soundtrack - 04 Ballad of the Burning Squirrel (Ch 1 Dark World).mp3"></source>
+		</audio>
+	</div>
+
+	<div id="topbar">
+		<div class="content-container">
+			<a href="index.html" id="go-to-main">Go to main</a>
+			Jump to objective:
+			<a href="obj01.html">1</a>
+			<a href="obj02.html">2</a>
+			<a href="obj03.html">3</a>
+			<a href="obj04.html">4</a>
+			<a href="obj05.html">5</a>
+			<a href="obj06.html">6</a>
+			<a href="obj07.html">7</a>
+			<a href="obj08.html">8</a>
+			<a href="obj09.html">9</a>
+			<a href="obj10.html" class="selected">10</a>
+		</div>
+	</div>
+
+	<div class="content-container">
+		<h1>Objective 10: User Interface</h1>
+		<p>This game was created using WebGL and THREE.js, an API for WebGL.</p>
+		<div id="canvas-container" class="canvasContainer">
+			<div id="hud" class="hidden">
+				<div id="score">
+					<div id="score-text">
+						0:00
+					</div>
+				</div>
+				<div id="sounds">
+					<span id="music"></span>
+					<span id="sfx"></span>
+				</div>
+			</div>
+			<div id="start-menu" class="hidden">
+				<div id="text">
+					Hold space to jump<br>
+					"P" to pause, "R" to restart<br>
+					<span id="start" class="blink">Press any key to start</span> <br>
+				</div>
+			</div>
+			<div id="pause-menu" class="hidden">
+			</div>
+			<div id="win" class="hidden">
+				YOU WIN!!!
+			</div>
+			<div id="black">
+			</div>
+		</div>
+	</div>
+</body>
+</html>

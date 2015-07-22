@@ -152,5 +152,10 @@ _.extend(Sounds.prototype, {
 	chainsawDeath: function() {
 		this.saw.play();
 		this.die();
+	},
+
+	endGame: function() {
+		this.muteSFX();
+		this.lowerMusic();
 	}
 });
